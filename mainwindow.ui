@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>885</width>
-    <height>738</height>
+    <width>416</width>
+    <height>375</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -268,18 +268,6 @@
       </item>
      </layout>
     </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="QGroupBox" name="group_rgb">
-      <property name="title">
-       <string>RGB</string>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
-       <item>
-        <widget class="QtColorTriangle" name="colorTri_rgb1" native="true"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -298,12 +286,6 @@
    <class>QCustomPlot</class>
    <extends>QWidget</extends>
    <header>qcustomplot.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>QtColorTriangle</class>
-   <extends>QWidget</extends>
-   <header>qtcolortriangle.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

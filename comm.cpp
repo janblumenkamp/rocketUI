@@ -2,9 +2,9 @@
 #include <QObject>
 #include <QDebug>
 #include <QSerialPort>
-#include "fpgacomm.h"
+#include "comm.h"
 
-FPGA_Comm::FPGA_Comm()
+Comm::Comm()
 {
 	// Serieller Port
 	serial = new QSerialPort();
@@ -15,12 +15,12 @@ FPGA_Comm::FPGA_Comm()
 	pars_state = IDLE;
 }
 
-FPGA_Comm::~FPGA_Comm() // Destruktor
+Comm::~Comm() // Destruktor
 {
 	closePort();
 }
 
-bool FPGA_Comm::openPort(const QString port)
+bool Comm::openPort(const QString port)
 {
 	serial->setPortName(port);
 	serial->setBaudRate(QSerialPort::Baud19200);
@@ -37,12 +37,12 @@ bool FPGA_Comm::openPort(const QString port)
 	}
 }
 
-bool FPGA_Comm::isConnected(void)
+bool Comm::isConnected(void)
 {
 	return serial->isOpen();
 }
 
-void FPGA_Comm::closePort(void)
+void Comm::closePort(void)
 {
 	if(serial->isOpen())
 	{
@@ -55,7 +55,7 @@ void FPGA_Comm::closePort(void)
  * setzt Wert in Register
  * reg: 0 - 127 (letztes bit für r/w reserviert), val: 0 - 255
  */
-void FPGA_Comm::setReg(unsigned char reg, unsigned char val)
+void Comm::setReg(unsigned char reg, unsigned char val)
 {
 	if(serial->isOpen())
 	{
@@ -74,7 +74,7 @@ void FPGA_Comm::setReg(unsigned char reg, unsigned char val)
  * Frage ein Byte vom Slave an (Slave antwortet dann ggf. mit Schreibzugriff)
  * reg: 0 - 127 (letztes bit für r/w reserviert)
  */
-void FPGA_Comm::queryReg(unsigned char reg)
+void Comm::queryReg(unsigned char reg)
 {
 	if(serial->isOpen())
 	{
@@ -94,7 +94,7 @@ void FPGA_Comm::queryReg(unsigned char reg)
  *
  */
 
-void FPGA_Comm::readPort(void)
+void Comm::readPort(void)
 {
 	QByteArray ser_raw = serial->readAll(); // Speichere Daten in QBytearray
 

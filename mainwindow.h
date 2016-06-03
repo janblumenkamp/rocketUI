@@ -2,9 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "fpgacomm.h"
-#include "qtcolortriangle.h"
-#include "colorviewer.h"
+#include "comm.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,7 +18,7 @@ public:
 
 private:
 	Ui::MainWindow *ui;
-	FPGA_Comm *comm;
+    Comm *comm;
 	double temperature; // Aktuelle temperatur
 
 	#define TEMP_VALUES 300 // Temperaturwerte
@@ -36,7 +34,7 @@ private slots:
 	void led2_commRefresh(int val);
 	void led3_commRefresh(int val);
 
-	void newPackage(FPGA_Comm::Package *p); // Neues Paket von der FPGA_Comm Klasse empfangen
+    void newPackage(Comm::Package *p); // Neues Paket von der FPGA_Comm Klasse empfangen
 
 	void updateTempGraph(void); // Aktualisieren des Temperaturgraphen
 

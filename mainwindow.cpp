@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-	comm = new FPGA_Comm(); // Neues Objekt der FPGA Kommunikationsklasse
+    comm = new Comm(); // Neues Objekt der FPGA Kommunikationsklasse
 
 	// Timer zum periodischen aktualisieren des Graphen
 	timer_tempGraph = new QTimer(this);
@@ -36,9 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->temp_plot->yAxis2->setLabel("Temperatur in" + QString::fromUtf8("°") + "C");
 	ui->temp_plot->setBackground(Qt::transparent);
 	ui->temp_plot->setAttribute(Qt::WA_OpaquePaintEvent, false);
-
-	// RGB LED
-	connect(ui->colorTri_rgb1, SIGNAL(colorChanged(QColor)), this, SLOT(rgb1ColorChanged(QColor)));
 
     // Verbinde Spinfelder mit Slider:
 	connect(ui->spn_led0, SIGNAL(valueChanged(int)), ui->sld_led0, SLOT(setValue(int)));
@@ -64,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->spn_led3, SIGNAL(valueChanged(int)), this, SLOT(led3_commRefresh(int)));
 
 	// Neues Paket von der FPGA Klasse
-	connect(comm, SIGNAL(receivedPackage(FPGA_Comm::Package*)), this, SLOT(newPackage(FPGA_Comm::Package*)));
+    connect(comm, SIGNAL(receivedPackage(Comm::Package*)), this, SLOT(newPackage(Comm::Package*)));
 }
 
 /*
@@ -107,16 +104,16 @@ void MainWindow::commOpenPort()
 			// TODO: Manchmal wird korrekt gesendet, manchmal nicht...
 
 			// Lese nun die Werte ua sdem FPGA Board für die LEDs
-			comm->queryReg(FPGA_Comm::LED0);
-			comm->queryReg(FPGA_Comm::LED1);
-			comm->queryReg(FPGA_Comm::LED2);
-			comm->queryReg(FPGA_Comm::LED3);
-			comm->queryReg(FPGA_Comm::BUTTONS);
-			comm->queryReg(FPGA_Comm::TEMP_INT);
-			comm->queryReg(FPGA_Comm::TEMP_DEZI);
-			comm->queryReg(FPGA_Comm::RGB_R);
-			comm->queryReg(FPGA_Comm::RGB_G);
-			comm->queryReg(FPGA_Comm::RGB_B);
+            comm->queryReg(Comm::LED0);
+            comm->queryReg(Comm::LED1);
+            comm->queryReg(Comm::LED2);
+            comm->queryReg(Comm::LED3);
+            comm->queryReg(Comm::BUTTONS);
+            comm->queryReg(Comm::TEMP_INT);
+            comm->queryReg(Comm::TEMP_DEZI);
+            comm->queryReg(Comm::RGB_R);
+            comm->queryReg(Comm::RGB_G);
+            comm->queryReg(Comm::RGB_B);
 		}
 		else
 		{
@@ -174,55 +171,37 @@ void MainWindow::led3_commRefresh(int val)
 }
 
 /*
- * Neues Paket von der FPGA_Comm Klasse empfangen
+ * Neues Paket von der Comm Klasse empfangen
  *
  */
-void MainWindow::newPackage(FPGA_Comm::Package *p)
+void MainWindow::newPackage(Comm::Package *p)
 {
 	if(p->rw == true) // Schreibzugriff
 	{
 		QColor c;
 		switch (p->reg) {
-		case FPGA_Comm::LED0:
+        case Comm::LED0:
 			ui->spn_led0->setValue(p->data);
 			break;
-		case FPGA_Comm::LED1:
+        case Comm::LED1:
 			ui->spn_led1->setValue(p->data);
 			break;
-		case FPGA_Comm::LED2:
+        case Comm::LED2:
 			ui->spn_led2->setValue(p->data);
 			break;
-		case FPGA_Comm::LED3:
+        case Comm::LED3:
 			ui->spn_led3->setValue(p->data);
 			break;
-		case FPGA_Comm::BUTTONS:
+        case Comm::BUTTONS:
 			ui->chk_btnA->setChecked(p->data & (1<<0));
 			ui->chk_btnB->setChecked(p->data & (1<<1));
 			ui->chk_btnC->setChecked(p->data & (1<<2));
 			break;
-		case FPGA_Comm::TEMP_INT:
+        case Comm::TEMP_INT:
 			temperature = (temperature - qFloor(temperature)) + p->data; // Ändere nur die Ganzzahl vor dem Komma
 			break;
-		case FPGA_Comm::TEMP_DEZI:
+        case Comm::TEMP_DEZI:
 			temperature = qFloor(temperature) + ((double)p->data / 255);
-			break;
-		case FPGA_Comm::RGB_R:
-			qDebug() << "red: " << p->data;
-			c = ui->colorTri_rgb1->color();
-			c.setRed(p->data);
-			ui->colorTri_rgb1->setColor(c);
-			break;
-		case FPGA_Comm::RGB_G:
-			qDebug() << "green: " << p->data;
-			c = ui->colorTri_rgb1->color();
-			c.setGreen(p->data);
-			ui->colorTri_rgb1->setColor(c);
-			break;
-		case FPGA_Comm::RGB_B:
-			qDebug() << "blue: " << p->data;
-			c = ui->colorTri_rgb1->color();
-			c.setBlue(p->data);
-			ui->colorTri_rgb1->setColor(c);
 			break;
 		default:
 			break;
@@ -258,7 +237,7 @@ void MainWindow::updateTempGraph(void)
  */
 void MainWindow::rgb1ColorChanged(const QColor &col)
 {
-	comm->setReg(FPGA_Comm::RGB_R, col.red());
-	comm->setReg(FPGA_Comm::RGB_G, col.green());
-	comm->setReg(FPGA_Comm::RGB_B, col.blue());
+    comm->setReg(Comm::RGB_R, col.red());
+    comm->setReg(Comm::RGB_G, col.green());
+    comm->setReg(Comm::RGB_B, col.blue());
 }

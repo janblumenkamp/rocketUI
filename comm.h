@@ -5,13 +5,13 @@
 
 #include <QSerialPort>
 
-class FPGA_Comm: public QObject
+class Comm: public QObject
 {
 	Q_OBJECT
 
 public:
-	FPGA_Comm();
-	~FPGA_Comm();
+	Comm();
+	~Comm();
 	bool openPort(const QString port);
 	bool isConnected(void);
 	void setReg(unsigned char reg, unsigned char val);
@@ -44,7 +44,7 @@ private slots:
 	void readPort(void); // Wird von der seriellen Schnittstelle aufgerufen, wenn neue Daten zur Verfügung stehen
 
 signals:
-	void receivedPackage(FPGA_Comm::Package *p); // Wird gesendet, wenn ein neues, korrektes Paket empfangen wurde
+	void receivedPackage(Comm::Package *p); // Wird gesendet, wenn ein neues, korrektes Paket empfangen wurde
 };
 
 #endif // FPGACOMM_H
