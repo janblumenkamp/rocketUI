@@ -2,9 +2,9 @@
 #include <QObject>
 #include <QDebug>
 #include <QSerialPort>
-#include "comm.h"
+#include "serialinterface.h"
 
-Comm::Comm()
+SerialInterface::SerialInterface()
 {
 	// Serieller Port
 	serial = new QSerialPort();
@@ -13,12 +13,12 @@ Comm::Comm()
     connect(serial, SIGNAL(readyRead()), this, SLOT(readPort()));
 }
 
-Comm::~Comm() // Destruktor
+SerialInterface::~SerialInterface() // Destruktor
 {
 	closePort();
 }
 
-bool Comm::openPort(const QString port)
+bool SerialInterface::openPort(const QString port)
 {
 	serial->setPortName(port);
 	serial->setBaudRate(QSerialPort::Baud19200);
@@ -36,7 +36,7 @@ bool Comm::openPort(const QString port)
 	}
 }
 
-void Comm::writeByte(int8_t b)
+void SerialInterface::writeByte(int8_t b)
 {
     if(serial->isOpen())
     {
@@ -46,12 +46,25 @@ void Comm::writeByte(int8_t b)
     }
 }
 
-bool Comm::isConnected(void)
+void SerialInterface::writeString(int8_t *s, int length)
+{
+    if(serial->isOpen())
+    {
+        serial->write((const char *)s, length);
+    }
+}
+
+void SerialInterface::static_writeString(SerialInterface *si, int8_t *s, uint16_t length)
+{
+    si->writeString(s, length);
+}
+
+bool SerialInterface::isConnected(void)
 {
     return serial->isOpen();
 }
 
-void Comm::closePort(void)
+void SerialInterface::closePort(void)
 {
 	if(serial->isOpen())
 	{
@@ -65,7 +78,7 @@ void Comm::closePort(void)
  *
  */
 
-void Comm::readPort(void)
+void SerialInterface::readPort(void)
 {
 	QByteArray ser_raw = serial->readAll(); // Speichere Daten in QBytearray
 

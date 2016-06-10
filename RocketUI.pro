@@ -17,7 +17,6 @@ RESSOURCES += qdarkstyle/style.qrc
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    comm.cpp \
     qcustomplot.cpp \
     EMBcomm/Unittests.c \
     EMBcomm/PackageMemory.c \
@@ -25,10 +24,10 @@ SOURCES += main.cpp\
     EMBcomm/HAL_Serial.c \
     EMBcomm/HAL_Memory.c \
     EMBcomm/Comm_Package.c \
-    EMBcomm/Comm.c
+    EMBcomm/Comm.c \
+    serialinterface.cpp
 
 HEADERS  += mainwindow.h \
-    comm.h \
     qcustomplot.h \
     EMBcomm/Comm_Package.h \
     EMBcomm/Unittests.h \
@@ -36,7 +35,8 @@ HEADERS  += mainwindow.h \
     EMBcomm/Memory.h \
     EMBcomm/HAL_Serial.h \
     EMBcomm/HAL_Memory.h \
-    EMBcomm/Comm.h
+    EMBcomm/Comm.h \
+    serialinterface.h
 
 FORMS += \
     mainwindow.ui
