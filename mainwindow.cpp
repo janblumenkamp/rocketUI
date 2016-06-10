@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    comm = new Comm(); // Neues Objekt der FPGA Kommunikationsklasse
+    comm = new Comm();
 
 	// Timer zum periodischen aktualisieren des Graphen
 	timer_tempGraph = new QTimer(this);
@@ -34,10 +34,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->temp_plot->yAxis->setVisible(false); // Die linke Y-Achse soll deaktiviert werden und die recht aktiviert werden (damit die aktuelle Temperatur direkt abgelesen werden kann)
 	ui->temp_plot->yAxis2->setVisible(true);
 	ui->temp_plot->yAxis2->setLabel("Temperatur in" + QString::fromUtf8("°") + "C");
-	ui->temp_plot->setBackground(Qt::transparent);
-	ui->temp_plot->setAttribute(Qt::WA_OpaquePaintEvent, false);
+    //ui->temp_plot->setBackground(Qt::transparent);
+    //ui->temp_plot->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
-    // Verbinde Spinfelder mit Slider:
+  /*  // Verbinde Spinfelder mit Slider:
 	connect(ui->spn_led0, SIGNAL(valueChanged(int)), ui->sld_led0, SLOT(setValue(int)));
 	connect(ui->spn_led1, SIGNAL(valueChanged(int)), ui->sld_led1, SLOT(setValue(int)));
 	connect(ui->spn_led2, SIGNAL(valueChanged(int)), ui->sld_led2, SLOT(setValue(int)));
@@ -48,20 +48,19 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->sld_led1, SIGNAL(valueChanged(int)), ui->spn_led1, SLOT(setValue(int)));
 	connect(ui->sld_led2, SIGNAL(valueChanged(int)), ui->spn_led2, SLOT(setValue(int)));
 	connect(ui->sld_led3, SIGNAL(valueChanged(int)), ui->spn_led3, SLOT(setValue(int)));
-
+*/
 	// Buttons
 	connect(ui->btn_refreshPortList, SIGNAL(clicked()), this, SLOT(refreshPortList())); //Refresh Button (Liste der seriellen Ports)
 	connect(ui->btn_connect, SIGNAL(clicked()), this, SLOT(commOpenPort())); //Connect Button (Liste der seriellen Ports)
 	connect(ui->btn_disconnect, SIGNAL(clicked()), this, SLOT(commClosePort())); //Disconnect Button
 
-	// Spinfeld change event
+/*	// Spinfeld change event
 	connect(ui->spn_led0, SIGNAL(valueChanged(int)), this, SLOT(led0_commRefresh(int)));
 	connect(ui->spn_led1, SIGNAL(valueChanged(int)), this, SLOT(led1_commRefresh(int)));
 	connect(ui->spn_led2, SIGNAL(valueChanged(int)), this, SLOT(led2_commRefresh(int)));
 	connect(ui->spn_led3, SIGNAL(valueChanged(int)), this, SLOT(led3_commRefresh(int)));
-
-	// Neues Paket von der FPGA Klasse
-    connect(comm, SIGNAL(receivedPackage(Comm::Package*)), this, SLOT(newPackage(Comm::Package*)));
+*/
+    connect(comm, SIGNAL(receivedByte(int8_t)), this, SLOT(receivedByte(int8_t)));
 }
 
 /*
@@ -124,78 +123,12 @@ void MainWindow::commClosePort()
 }
 
 /*
- * LED 1 Änderung - aktualisiere Register
- *
- */
-void MainWindow::led0_commRefresh(int val)
-{
-	comm->setReg(0, (unsigned char)val);
-}
-
-/*
- * LED 2 Änderung - aktualisiere Register
- *
- */
-void MainWindow::led1_commRefresh(int val)
-{
-	comm->setReg(1, (unsigned char)val);
-}
-
-/*
- * LED 3 Änderung - aktualisiere Register
- *
- */
-void MainWindow::led2_commRefresh(int val)
-{
-	comm->setReg(2, (unsigned char)val);
-}
-
-/*
- * LED 4 Änderung - aktualisiere Register
- *
- */
-void MainWindow::led3_commRefresh(int val)
-{
-	comm->setReg(3, (unsigned char)val);
-}
-
-/*
  * Neues Paket von der Comm Klasse empfangen
  *
  */
-void MainWindow::newPackage(Comm::Package *p)
+void MainWindow::receivedByte(int8_t byte)
 {
-	if(p->rw == true) // Schreibzugriff
-	{
-		QColor c;
-		switch (p->reg) {
-        case Comm::LED0:
-			ui->spn_led0->setValue(p->data);
-			break;
-        case Comm::LED1:
-			ui->spn_led1->setValue(p->data);
-			break;
-        case Comm::LED2:
-			ui->spn_led2->setValue(p->data);
-			break;
-        case Comm::LED3:
-			ui->spn_led3->setValue(p->data);
-			break;
-        case Comm::BUTTONS:
-			ui->chk_btnA->setChecked(p->data & (1<<0));
-			ui->chk_btnB->setChecked(p->data & (1<<1));
-			ui->chk_btnC->setChecked(p->data & (1<<2));
-			break;
-        case Comm::TEMP_INT:
-			temperature = (temperature - qFloor(temperature)) + p->data; // Ändere nur die Ganzzahl vor dem Komma
-			break;
-        case Comm::TEMP_DEZI:
-			temperature = qFloor(temperature) + ((double)p->data / 255);
-			break;
-		default:
-			break;
-		}
-	}
+
 }
 
 /*
@@ -219,14 +152,4 @@ void MainWindow::updateTempGraph(void)
 		ui->temp_plot->yAxis->setRange(temperature_min - 2, temperature_max + 2);
 		ui->temp_plot->replot();
 	}
-}
-
-/*
- * Slot - der Benutzer hat die Farbe geändert in der Farbauswahl des Farbdreiecks
- */
-void MainWindow::rgb1ColorChanged(const QColor &col)
-{
-    comm->setReg(Comm::RGB_R, col.red());
-    comm->setReg(Comm::RGB_G, col.green());
-    comm->setReg(Comm::RGB_B, col.blue());
 }

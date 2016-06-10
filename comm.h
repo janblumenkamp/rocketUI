@@ -14,37 +14,17 @@ public:
 	~Comm();
 	bool openPort(const QString port);
 	bool isConnected(void);
-	void setReg(unsigned char reg, unsigned char val);
-	void queryReg(unsigned char reg);
-	void closePort(void);
-
-	struct Package {
-		unsigned char data; // Daten
-		unsigned char reg; // Register
-		unsigned char chk_rec; // Empfangene Checksumme
-		unsigned char chk_calc; // Berechnete Checksumme
-		bool rw; // Schreib oder Lesezugriff
-		bool valid; // Daten gültig?
-	};
-
-	enum REGISTER {
-		LED0, LED1, LED2, LED3,
-		BUTTONS,
-		TEMP_INT, TEMP_DEZI, // Ganze Gradzahlen und Nachkommastellen
-		RGB_R, RGB_G, RGB_B // RGB LED
-	};
+    void closePort(void);
+    void writeByte(int8_t b);
 
 private:
 	QSerialPort *serial; // Serielle Schnittstelle
-	enum PARS_STATE_E {IDLE, REG, DATA, CHK};
-	unsigned char pars_state; // Statemachine für den Parser der seriellen Empfangsschnittstelle
-	Package rec; // Empfangenes Paket
 
 private slots:
 	void readPort(void); // Wird von der seriellen Schnittstelle aufgerufen, wenn neue Daten zur Verfügung stehen
 
 signals:
-	void receivedPackage(Comm::Package *p); // Wird gesendet, wenn ein neues, korrektes Paket empfangen wurde
+    void receivedByte(int8_t byte);
 };
 
 #endif // FPGACOMM_H

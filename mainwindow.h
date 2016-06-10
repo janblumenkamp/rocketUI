@@ -29,16 +29,14 @@ private slots:
 	void commOpenPort(); // Öffnet comport
 	void commClosePort(); // schließt comport
 
-	void led0_commRefresh(int val); // Änderung der Werte in den LEDs
+    /*void led0_commRefresh(int val); // Änderung der Werte in den LEDs
 	void led1_commRefresh(int val);
 	void led2_commRefresh(int val);
-	void led3_commRefresh(int val);
+    void led3_commRefresh(int val);*/
 
-    void newPackage(Comm::Package *p); // Neues Paket von der FPGA_Comm Klasse empfangen
+    void receivedByte(int8_t byte);
 
-	void updateTempGraph(void); // Aktualisieren des Temperaturgraphen
-
-	void rgb1ColorChanged(const QColor &col); // Farbe geändert
+    void updateTempGraph(void); // Aktualisieren des Temperaturgraphen
 };
 
 #endif // MAINWINDOW_H
