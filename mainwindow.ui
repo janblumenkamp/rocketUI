@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>416</width>
-    <height>375</height>
+    <width>438</width>
+    <height>309</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -18,241 +18,19 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <item row="1" column="1">
-     <widget class="QGroupBox" name="group_leds">
-      <property name="title">
-       <string>LEDs</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QLabel" name="lbl_led0">
-         <property name="text">
-          <string>LED 1:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QSlider" name="sld_led1">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="pageStep">
-          <number>15</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QSlider" name="sld_led0">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="pageStep">
-          <number>15</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QSpinBox" name="spn_led1">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QSlider" name="sld_led2">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="pageStep">
-          <number>15</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QSpinBox" name="spn_led2">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QSpinBox" name="spn_led3">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_led1">
-         <property name="text">
-          <string>LED 2:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="lbl_led3">
-         <property name="text">
-          <string>LED 4:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QSlider" name="sld_led3">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="pageStep">
-          <number>15</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QSpinBox" name="spn_led0">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lbl_led2">
-         <property name="text">
-          <string>LED 3:</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="2" column="0" colspan="2">
-     <widget class="QGroupBox" name="group_temperature">
-      <property name="title">
-       <string>Temperatur</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout" rowstretch="0,0">
-       <item row="1" column="0" colspan="2">
-        <widget class="QCustomPlot" name="temp_plot" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="group_btns">
-      <property name="title">
-       <string>Buttons</string>
-      </property>
-      <layout class="QFormLayout" name="formLayout_2">
-       <item row="0" column="0">
-        <widget class="QLabel" name="lbl_btnA">
-         <property name="text">
-          <string>Push A:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QCheckBox" name="chk_btnA">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_btnB">
-         <property name="text">
-          <string>Push B:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QCheckBox" name="chk_btnB">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lbl_btnC">
-         <property name="text">
-          <string>Push C:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QCheckBox" name="chk_btnC">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
+    <item row="0" column="0">
      <layout class="QGridLayout" name="group_serial">
-      <item row="0" column="1">
-       <widget class="QPushButton" name="btn_refreshPortList">
-        <property name="text">
-         <string>Refresh</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QComboBox" name="cmb_serialPorts"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_state">
-        <property name="text">
-         <string>Status:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="lbl_current_state">
-        <property name="text">
-         <string>Nicht verbunden</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="2">
        <widget class="QPushButton" name="btn_connect">
         <property name="text">
          <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="btn_refreshPortList">
+        <property name="text">
+         <string>Refresh</string>
         </property>
        </widget>
       </item>
@@ -266,7 +44,106 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="0">
+       <widget class="QComboBox" name="cmb_serialPorts"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="lbl_current_state">
+        <property name="text">
+         <string>Not connected</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_state">
+        <property name="text">
+         <string>Status:</string>
+        </property>
+       </widget>
+      </item>
      </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab_flight">
+       <attribute name="title">
+        <string>Flight</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <layout class="QVBoxLayout" name="group_data">
+          <item>
+           <widget class="QLCDNumber" name="lcd_timer"/>
+          </item>
+          <item>
+           <widget class="QTableView" name="tbl_data"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="group_plot">
+          <item>
+           <widget class="QLabel" name="lbl_flightplot">
+            <property name="text">
+             <string>Flightplot:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCustomPlot" name="plot_flight" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbl_flightstate">
+            <property name="text">
+             <string>Status</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+       <zorder></zorder>
+       <zorder>verticalLayoutWidget</zorder>
+       <zorder>verticalLayoutWidget_2</zorder>
+      </widget>
+      <widget class="QWidget" name="tab_messages">
+       <attribute name="title">
+        <string>Messages</string>
+       </attribute>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="lbl_msgin">
+          <property name="text">
+           <string>Ingoing:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="lbl_msgout">
+          <property name="text">
+           <string>Outgoing:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTableView" name="tbl_msgin"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QTableView" name="tbl_msgout"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>

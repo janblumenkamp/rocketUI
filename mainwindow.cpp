@@ -27,15 +27,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		temperature_time[i] = -i;
 	}
-	ui->temp_plot->addGraph();
-	ui->temp_plot->graph(0)->setData(temperature_time, temperature_history);
-	ui->temp_plot->xAxis->setLabel("t");
-	ui->temp_plot->xAxis->setRange(-TEMP_VALUES, 0);
-	ui->temp_plot->yAxis->setVisible(false); // Die linke Y-Achse soll deaktiviert werden und die recht aktiviert werden (damit die aktuelle Temperatur direkt abgelesen werden kann)
-	ui->temp_plot->yAxis2->setVisible(true);
-	ui->temp_plot->yAxis2->setLabel("Temperatur in" + QString::fromUtf8("°") + "C");
-    //ui->temp_plot->setBackground(Qt::transparent);
-    //ui->temp_plot->setAttribute(Qt::WA_OpaquePaintEvent, false);
+    ui->plot_flight->addGraph();
+    ui->plot_flight->graph(0)->setData(temperature_time, temperature_history);
+    ui->plot_flight->xAxis->setLabel("t");
+    ui->plot_flight->xAxis->setRange(-TEMP_VALUES, 0);
+    ui->plot_flight->yAxis->setVisible(false); // Die linke Y-Achse soll deaktiviert werden und die recht aktiviert werden (damit die aktuelle Temperatur direkt abgelesen werden kann)
+    ui->plot_flight->yAxis2->setVisible(true);
+    ui->plot_flight->yAxis2->setLabel("Temperatur in" + QString::fromUtf8("°") + "C");
+    //ui->plot_flight->setBackground(Qt::transparent);
+    //ui->plot_flight->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
   /*  // Verbinde Spinfelder mit Slider:
 	connect(ui->spn_led0, SIGNAL(valueChanged(int)), ui->sld_led0, SLOT(setValue(int)));
@@ -147,9 +147,9 @@ void MainWindow::updateTempGraph(void)
 		temperature_history.pop_back();
 		temperature_history.push_front(temperature);
 
-		ui->temp_plot->graph(0)->setData(temperature_time, temperature_history);
-		ui->temp_plot->yAxis2->setRange(temperature_min - 2, temperature_max + 2); // yAxis 2 ist die rechte Y-Achse. yAxis 1 ist deaktiviert, aber alle Werte bezeiehn sich auf diese Achse, wewegen bei beiden die Range eingestellt werden muss
-		ui->temp_plot->yAxis->setRange(temperature_min - 2, temperature_max + 2);
-		ui->temp_plot->replot();
+        ui->plot_flight->graph(0)->setData(temperature_time, temperature_history);
+        ui->plot_flight->yAxis2->setRange(temperature_min - 2, temperature_max + 2); // yAxis 2 ist die rechte Y-Achse. yAxis 1 ist deaktiviert, aber alle Werte bezeiehn sich auf diese Achse, wewegen bei beiden die Range eingestellt werden muss
+        ui->plot_flight->yAxis->setRange(temperature_min - 2, temperature_max + 2);
+        ui->plot_flight->replot();
 	}
 }
