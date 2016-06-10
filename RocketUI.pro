@@ -13,6 +13,8 @@ TEMPLATE = app
 
 QMAKE_CFLAGS += -std=c99
 
+RESSOURCES += qdarkstyle/style.qrc
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     comm.cpp \
@@ -38,3 +40,9 @@ HEADERS  += mainwindow.h \
 
 FORMS += \
     mainwindow.ui
+
+RESOURCES += \
+    style.qrc
+
+OTHER_FILES += \
+    style.qss
