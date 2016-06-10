@@ -18,24 +18,34 @@ MainWindow::MainWindow(QWidget *parent) :
     comm = new Comm();
 
 	// Timer zum periodischen aktualisieren des Graphen
-	timer_tempGraph = new QTimer(this);
-	connect(timer_tempGraph, SIGNAL(timeout()), this, SLOT(updateTempGraph()));
-	timer_tempGraph->start(50); // 20Hz
-	temperature_history = QVector<double>(TEMP_VALUES); // N Werte in Vektor speichern können
-	temperature_time = QVector<double>(TEMP_VALUES); // N Werte für Zeitachse
-	for(int i = 0; i < TEMP_VALUES; i++)
+    height_history = QVector<double>(100);
+    height_time = QVector<double>(100);
+    for(int i = 0; i < 100; i++)
 	{
-		temperature_time[i] = -i;
+        height_time[i] = -i;
 	}
     ui->plot_flight->addGraph();
-    ui->plot_flight->graph(0)->setData(temperature_time, temperature_history);
+    ui->plot_flight->graph(0)->setData(height_time, height_history);
     ui->plot_flight->xAxis->setLabel("t");
-    ui->plot_flight->xAxis->setRange(-TEMP_VALUES, 0);
+    ui->plot_flight->xAxis->setRange(-100, 0);
     ui->plot_flight->yAxis->setVisible(false); // Die linke Y-Achse soll deaktiviert werden und die recht aktiviert werden (damit die aktuelle Temperatur direkt abgelesen werden kann)
     ui->plot_flight->yAxis2->setVisible(true);
     ui->plot_flight->yAxis2->setLabel("Temperatur in" + QString::fromUtf8("°") + "C");
     //ui->plot_flight->setBackground(Qt::transparent);
     //ui->plot_flight->setAttribute(Qt::WA_OpaquePaintEvent, false);
+
+    QStringList tableHeader_data;
+    tableHeader_data << "Item" << "Is" << "Max";
+    ui->tbl_data->setColumnCount(tableHeader_data.count());
+    ui->tbl_data->setHorizontalHeaderLabels(tableHeader_data);
+
+    QStringList tableHeader_msg;
+    tableHeader_msg << "ID" << "Type" << "Reg" << "Length";
+    ui->tbl_msgin->setColumnCount(tableHeader_msg.count());
+    ui->tbl_msgin->setHorizontalHeaderLabels(tableHeader_msg);
+    ui->tbl_msgout->setColumnCount(tableHeader_msg.count());
+    ui->tbl_msgout->setHorizontalHeaderLabels(tableHeader_msg);
+
 
   /*  // Verbinde Spinfelder mit Slider:
 	connect(ui->spn_led0, SIGNAL(valueChanged(int)), ui->sld_led0, SLOT(setValue(int)));
@@ -141,15 +151,15 @@ void MainWindow::updateTempGraph(void)
 	if(comm->isConnected())
 	{
 		using namespace std;
-		double temperature_max = *max_element(temperature_history.begin(), temperature_history.end());
-		double temperature_min = *min_element(temperature_history.begin(), temperature_history.end());
+        double height_max = *max_element(height_history.begin(), height_history.end());
+        double height_min = *min_element(height_history.begin(), height_history.end());
 
-		temperature_history.pop_back();
-		temperature_history.push_front(temperature);
+        height_history.pop_back();
+        height_history.push_front(height);
 
-        ui->plot_flight->graph(0)->setData(temperature_time, temperature_history);
-        ui->plot_flight->yAxis2->setRange(temperature_min - 2, temperature_max + 2); // yAxis 2 ist die rechte Y-Achse. yAxis 1 ist deaktiviert, aber alle Werte bezeiehn sich auf diese Achse, wewegen bei beiden die Range eingestellt werden muss
-        ui->plot_flight->yAxis->setRange(temperature_min - 2, temperature_max + 2);
+        ui->plot_flight->graph(0)->setData(height_time, height_history);
+        ui->plot_flight->yAxis2->setRange(height_min - 2, height_max + 2); // yAxis 2 ist die rechte Y-Achse. yAxis 1 ist deaktiviert, aber alle Werte bezeiehn sich auf diese Achse, wewegen bei beiden die Range eingestellt werden muss
+        ui->plot_flight->yAxis->setRange(height_min - 2, height_max + 2);
         ui->plot_flight->replot();
 	}
 }

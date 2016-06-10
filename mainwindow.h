@@ -19,15 +19,13 @@ public:
 private:
 	Ui::MainWindow *ui;
     Comm *comm;
-	double temperature; // Aktuelle temperatur
+    double height;
 
-	#define TEMP_VALUES 300 // Temperaturwerte
-	QTimer *timer_tempGraph;
-	QVector<double> temperature_history, temperature_time; // Letzte Temperaturwerte (y Achse) und Zeitwerte (x Achse)
+    QVector<double> height_history, height_time;
 private slots:
-	void refreshPortList(); // Aktualisiert Portliste
-	void commOpenPort(); // Öffnet comport
-	void commClosePort(); // schließt comport
+    void refreshPortList();
+    void commOpenPort();
+    void commClosePort();
 
     /*void led0_commRefresh(int val); // Änderung der Werte in den LEDs
 	void led1_commRefresh(int val);

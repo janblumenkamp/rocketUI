@@ -66,7 +66,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_flight">
        <attribute name="title">
@@ -74,17 +74,31 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QVBoxLayout" name="group_data">
+         <layout class="QVBoxLayout" name="group_data" stretch="1,0,0,5">
           <item>
            <widget class="QLCDNumber" name="lcd_timer"/>
           </item>
           <item>
-           <widget class="QTableView" name="tbl_data"/>
+           <widget class="QPushButton" name="btn_calibrate">
+            <property name="text">
+             <string>Calibrate</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_launch">
+            <property name="text">
+             <string>LAUNCH</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tbl_data"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="group_plot">
+         <layout class="QVBoxLayout" name="group_plot" stretch="0,1,0">
           <item>
            <widget class="QLabel" name="lbl_flightplot">
             <property name="text">
@@ -120,7 +134,7 @@
        <attribute name="title">
         <string>Messages</string>
        </attribute>
-       <layout class="QFormLayout" name="formLayout">
+       <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
          <widget class="QLabel" name="lbl_msgin">
           <property name="text">
@@ -136,10 +150,10 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QTableView" name="tbl_msgin"/>
+         <widget class="QTableWidget" name="tbl_msgin"/>
         </item>
         <item row="1" column="1">
-         <widget class="QTableView" name="tbl_msgout"/>
+         <widget class="QTableWidget" name="tbl_msgout"/>
         </item>
        </layout>
       </widget>
