@@ -30,6 +30,8 @@ bool Comm::openPort(const QString port)
 	serial->setFlowControl(QSerialPort::NoFlowControl);
 	if (serial->open(QIODevice::ReadWrite)) {
 		qDebug() << "Opened sucessfully";
+
+        setReg(0, 0);
 		return true;
 	} else {
 		qDebug() << "Opening port failed!";
@@ -58,16 +60,16 @@ void Comm::closePort(void)
 void Comm::setReg(unsigned char reg, unsigned char val)
 {
 	if(serial->isOpen())
-	{
-		unsigned char data[4]; // 4 byte: start, register + rw, data, checksum
-		data[0] = 0x55; // b01010101
-		data[1] = reg | (1<<7); //Setze register und letztes bit (Schreibzugriff)
-		data[2] = val;
-		data[3] = data[0] + data[1] + data[2];
+    {
+        unsigned char data[4]; // 4 byte: start, register + rw, data, checksum
+        data[0] = 0x55; // b01010101
+        data[1] = reg | (1<<7); //Setze register und letztes bit (Schreibzugriff)
+        data[2] = val;
+        data[3] = data[0] + data[1] + data[2];
 
-		serial->write((const char *)data, 4);
-		qDebug()<<"Sent package (set register" << reg << " with data " << val << ")";
-	}
+        serial->write((const char *)data, 1);
+        qDebug()<<"t package (set register" << reg << " with data " << val << ")";
+    }
 }
 
 /*

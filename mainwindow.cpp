@@ -85,6 +85,9 @@ void MainWindow::refreshPortList()
 	{
 	   ui->cmb_serialPorts->addItem(port.portName());
 	}
+
+    /////// ONLY FOR DEBUGGING PURPOSES - VIRTUAL SERIAL PORT!
+    ui->cmb_serialPorts->addItem("pts/5");
 }
 
 /*
@@ -100,20 +103,6 @@ void MainWindow::commOpenPort()
 			ui->lbl_current_state->setText("Connected");
 			ui->btn_connect->setEnabled(false);
 			ui->btn_disconnect->setEnabled(true);
-
-			// TODO: Manchmal wird korrekt gesendet, manchmal nicht...
-
-			// Lese nun die Werte ua sdem FPGA Board für die LEDs
-            comm->queryReg(Comm::LED0);
-            comm->queryReg(Comm::LED1);
-            comm->queryReg(Comm::LED2);
-            comm->queryReg(Comm::LED3);
-            comm->queryReg(Comm::BUTTONS);
-            comm->queryReg(Comm::TEMP_INT);
-            comm->queryReg(Comm::TEMP_DEZI);
-            comm->queryReg(Comm::RGB_R);
-            comm->queryReg(Comm::RGB_G);
-            comm->queryReg(Comm::RGB_B);
 		}
 		else
 		{

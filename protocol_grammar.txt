@@ -1,72 +1,55 @@
-to do schaltung: Schrittmotoransteuerung, sensor fuer fallschirm auswurf, RGB LED fuer status, SPI RAM
+Protocol stack files on the rocket:
+Each package should also get a lifetime, after that it will be deleted from the stack if it could not be sent or if the stack is full so that there can be made new space for very important messages!
 
-
-Communication between rocket and GCS. The rocket sends processed data. Each package has to be responded with an acknowledge.
-
-[START][TIME]<TYPE><REG><LENGTH>[DATA][CHECKSUM]
-
-[START]: ? Start sequence for new package
-    <0X00><0XFF><0X00><0XFF>
-[TIME]: ? time stamp: time since boot of rocket. The GCS synchronizes with the rocket, even though the time stamp is only important in the direction Rocket-GCS.
-    <TIME_MSB><TIME><TIME><TIME_LSB>
-<REG>: ? Important in case of TYPE = DATA, the reg represents
-<LENGTH>:  ? The length of the data depends on the type byte.
-    TYPE=   ACK:    0
-            DATA:   AMOUNT OF REGISTERS INCLUDING REG
-            CMD:    0 ? If we send a command, we never transmit multiple commands.
-            STATUS: 1
-            ERR:    1
-[DATA]:     ([LENGTH]*<DATA>)
-[CHECKSUM]: <CHECK_MSB><CHECK_LSB>
-
-TYPE:   ACK         0
-        DATA        1
-        CMD         2
-        STATUS      3
-        ERR         4
-REG:
-    DATA:
-        ALTITUDE    0
-        SPEED_VERT  1
-        ACC_X       2
-        ACC_Y       3
-        ACC_Z       4
-        GYR_X       5
-        GYR_Y       6
-        GYR_Z       7
-        IMU_X       8
-        IMU_Y       9
-        IMU_Z       10
-        TEMPERATURE 11
-    CMD:
-        SET STREAM  0       ? We want to be able to tell the rocket what data it is supposed to stream continously without us always asking. The data bytes represent the enable/disable flag for the corresponding registers.
-        CALIBRATE   1
-        START       2
-        DEPLOY PARACHUTE 3
-    STATUS:
-        IDLE        0       ? Rocket is waiting on the ground for the start signal
-        ACCEL_UP    1       ? Rocket is accelerating (motor burning)
-        DECEL_UP    2       ? Rocket is decelerating and approaching epogeum
-        EPO         3       ? Rocket reached highest point
-        PARACHUTE   4       ? Parachute deployed
-        ACCEL_DOWN  5       ? Rocket is accelerating to the ground
-        LANDED      6       ? Rocket has landed
-    ERROR:
-        START       0       ? Start not possible
-        CALIBRATE   1       ? Calibration not possible
-        DEPLOY      2       ? Parachute deploy not possible
-        MEMORY      3       ? Volatile memory on the rocket is full!
-
-Example:
-1) Start rocket:
-    GCS -> Rocket:
-    00 ff 00 ff (Start seq) 00 00 ff 02 (time stamp) 02 (type: cmd) 00 (length: 0 byte) (no data) xx xx (checksum)
-    Rocket -> GCS:
-    00 ff 00 ff (Start seq) 00 00 ff 03 (time stamp) 00 (type: ack) 00 (length: 0 byte) (no data) xx xx (checksum)
-
-
-The GCS synchronizes the timestamp with the rocket.
-The timeout for an acknowledge is 1s.
-The rocket streams data in a period of 500ms.
-
-The messages that the rocket wants to send are generally stored in a volatile (external) memory. If the message could be transmitted and an ack was received, the message is cleared from the memory. If the connection is lost (rocket out of reach; transmission timeout), stay in the memory and sent continously as soon as the connection to the GCS is reestablished and an ack is received. If the memory on the rocket is about to get full, an memory error is stored as last message. It's the same on the GCS, even though the memory is unlikely to fill, we want to check this corner case. Incoming messages on the rocket are processed as soon as the message memory is empty and are stored for processing in a different section!
+- HAL_Memory: Abstraction layer for interfacing the memory on the rocket
+    init()
+        initalizes the memory
+    write_string(str, len, adr)
+        writes the string str with the length len to the adress adr
+    read_string(adr, buf, len)
+        reads len bytes from the given adress and writes into buffer
+- HAL_Serial: Abstraction layer for interfacing the serial interface
+    init()
+        initializes the serial interface
+    write_string(str, len, adr)
+        writes the string str with the length len to the adress adr
+    read_callback(by)
+        this function has to be called if a new byte is received. The received byte is passed by.
+- Memory: Implementation of virtual memory as part of the physical memory. There will be one receive and one sent instance
+    init(m)
+        initializes the memory instance
+    push(m, d, len)
+        pushs the array d with the length len (where len < than the maximum length per slot) to the memory m. Returns id.
+    delete(m, id)
+        deletes the array with the id id from the memory m.
+    get_freeSlots(m)
+        returns the amount of free slots
+- Comm: Everything regarding the communication comes together here\
+    init(c, call_in, m_in, m_out)
+        initializes the comm c with the HAL_Serial callback function (new byte received, for the parser), the message queue for incoming messages m_in and for outgoing messages m_out
+    parser(by)
+        being called from the HAL_Serial new byte callback (call_in). Parses the message and calls the call_out callback if package has been successfully parsed, puts the message in the queue for incoming messages and sends an ack package if the message could be stored on the message queue.
+        If it receives an ack message, it deletes the message with the corresponding id from the m_out queue.
+    get_packageAmount(pm)
+        returns the amount of packages in the queue
+    get_package(pm, id, p)
+        reads the package with the id id from the memory m into the given package p
+    get_nextPackage(pm, p)
+        reads the oldest package from the memory m into the given package p
+    send_pack(p)
+        sends the message p to the queue for outgoing messages
+    send_messages()
+        sends all the messages on the queue for outgoing messages via the serial interface
+- main
+    HAL_Memory_init()
+    HAL_Serial_init()
+    Memory_init(m_in)
+    Memory_init(m_out)
+    PackageMemory(p_in, m_in)
+    PackageMemory(p_out, m_out)    
+    Comm_init(c, p, m_in, m_out, HAL_Serial_write)
+    
+    Main loop:
+        - process incoming messages (read from p_in)
+        - process messages to send (send_pack(p))
+        - send outgoing messages (send_messages())
