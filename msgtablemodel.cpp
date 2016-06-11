@@ -2,11 +2,14 @@
 
 extern "C" {
     #include "EMBcomm/Comm_Package.h"
+    #include "EMBcomm/PackageMemory.h"
+    #include "EMBcomm/Comm.h"
 }
 
-MSGTableModel::MSGTableModel(QObject *parent) :
+MSGTableModel::MSGTableModel(QObject *parent, Memory_t *m) :
     QAbstractTableModel(parent)
 {
+    mem = m;
 }
 
 int MSGTableModel::rowCount(const QModelIndex & /*parent*/) const {
@@ -108,6 +111,12 @@ QVariant MSGTableModel::data(const QModelIndex &index, int role) const {
         }
     } else if(role == Qt::CheckStateRole) {
         if(index.column() == COL_ACK) {
+            if(!packages[row].ack) {
+                if(PackageMemory_GetMemID(mem, packages[row].p.id) < 0) {
+                    // The package ID was not found in the memory, that means the entry is not available anymore and therefore an ack received.
+                    //packages[row].ack = 1;
+                }
+            }
             return packages[row].ack ? Qt::Checked : Qt::Unchecked;
         }
     }
@@ -124,4 +133,9 @@ void MSGTableModel::addData(Comm_Package_t *p) {
     Package_t pck;
     pck.p = *p;
     packages.push_back(pck);
+}
+
+int MSGTableModel::send(Comm_Package_t *p) {
+    addData(p);
+    return PackageMemory_ToMemory(mem, p);
 }

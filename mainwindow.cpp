@@ -56,26 +56,15 @@ MainWindow::MainWindow(QWidget *parent) :
     flightdatamodel = new FlightdataModel(0);
     ui->tbl_flightdata->setModel(flightdatamodel);
 
-    msgtblmdl_in = new MSGTableModel(0);
+    msgtblmdl_in = new MSGTableModel(0, comm.m_in);
     ui->tbl_msgin->setModel(msgtblmdl_in);
-    msgtblmdl_out = new MSGTableModel(0);
+    ui->tbl_msgin->verticalHeader()->hide();
+    msgtblmdl_out = new MSGTableModel(0, comm.m_out);
     ui->tbl_msgout->setModel(msgtblmdl_out);
+    ui->tbl_msgout->verticalHeader()->hide();
 
     flightdatamodel->addData(PACKAGE_DATA_ACC_X, 1.5);
     flightdatamodel->addData(PACKAGE_DATA_ACC_X, 0.5);
-
-    Comm_Package_t pack;
-    pack.id = 1234;
-    pack.length = 12;
-    pack.type = PACKAGE_TYPE_CMD;
-    pack.reg = PACKAGE_CMD_CALIBRATE;
-    msgtblmdl_in->addData(&pack);
-
-    pack.id = 2345;
-    pack.length = 33;
-    pack.type = PACKAGE_TYPE_STATUS;
-    pack.reg = PACKAGE_STATUS_IDLE;
-    msgtblmdl_in->addData(&pack);
 
     ui->lcd_timer->display(QString("T-00:00:000"));
    /* QStringList tableHeader_data;
@@ -145,7 +134,7 @@ void MainWindow::calibrate()
     p.length = 0;
     p.type = PACKAGE_TYPE_CMD;
     p.reg = PACKAGE_CMD_CALIBRATE;
-    PackageMemory_ToMemory(comm.m_out, &p);
+    msgtblmdl_out->send(&p);
     Comm_SendAllPackages(&comm);
 }
 

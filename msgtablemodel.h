@@ -9,6 +9,7 @@
 
 extern "C" {
     #include "EMBcomm/Comm_Package.h"
+    #include "EMBcomm/Comm.h"
 }
 
 class MSGTableModel : public QAbstractTableModel
@@ -31,14 +32,17 @@ class MSGTableModel : public QAbstractTableModel
 
     QVector<Package_t> packages;
 
+    Memory_t *mem;
+
 public:
-    MSGTableModel(QObject *parent);
+    MSGTableModel(QObject *parent, Memory_t *m);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const ;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     void addData(Comm_Package_t *p);
+    int send(Comm_Package_t *p);
 };
 
 #endif // MSGTABLEMODEL_H
