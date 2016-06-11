@@ -46,10 +46,61 @@ QVariant MSGTableModel::data(const QModelIndex &index, int role) const {
             case PACKAGE_TYPE_CMD:      return QString("CMD");
             case PACKAGE_TYPE_STATUS:   return QString("STATUS");
             case PACKAGE_TYPE_ERROR:    return QString("ERROR");
+            default:                    return QString("%i").arg(packages[row].p.type);
             }
             break;
         case COL_REG:
-            return QString("%1").arg(packages[row].p.reg);
+            switch (packages[row].p.type) {
+            case PACKAGE_TYPE_ACK:
+                return QString("ACK");
+            case PACKAGE_TYPE_DATA:
+                switch (packages[row].p.reg) {
+                case PACKAGE_DATA_ALTITUDE:     return QString("ALT");
+                case PACKAGE_DATA_SPEED_VERT:   return QString("SPEED");
+                case PACKAGE_DATA_ACC_X:        return QString("ACC_X");
+                case PACKAGE_DATA_ACC_Y:        return QString("ACC_Y");
+                case PACKAGE_DATA_ACC_Z:        return QString("ACC_Z");
+                case PACKAGE_DATA_GYR_X:        return QString("GYR_X");
+                case PACKAGE_DATA_GYR_Y:        return QString("GYR_Y");
+                case PACKAGE_DATA_GYR_Z:        return QString("GYR_Z");
+                case PACKAGE_DATA_IMU_X:        return QString("IMU_X");
+                case PACKAGE_DATA_IMU_Y:        return QString("IMU_Y");
+                case PACKAGE_DATA_IMU_Z:        return QString("IMU_Z");
+                case PACKAGE_DATA_TEMPERATURE:  return QString("TEMP");
+                default:                        return QString("%1").arg(packages[row].p.reg);
+                }
+                break;
+            case PACKAGE_TYPE_CMD:
+                switch (packages[row].p.reg) {
+                case PACKAGE_CMD_CALIBRATE:         return QString("CALIBR");
+                case PACKAGE_CMD_DEPLOY_PARACHUTE:  return QString("PARACH");
+                case PACKAGE_CMD_SET_STREAM:        return QString("STREAM");
+                case PACKAGE_CMD_START:             return QString("START");
+                default:                            return QString("%1").arg(packages[row].p.reg);
+                }
+                break;
+            case PACKAGE_TYPE_STATUS:
+                switch (packages[row].p.reg) {
+                case PACKAGE_STATUS_IDLE:           return QString("IDLE");
+                case PACKAGE_STATUS_ACCEL_UP:       return QString("ACC_UP");
+                case PACKAGE_STATUS_DECEL_UP:       return QString("DEC_UP");
+                case PACKAGE_STATUS_EPO:            return QString("EPO");
+                case PACKAGE_STATUS_PARACHUTE:      return QString("PARACH");
+                case PACKAGE_STATUS_ACCEL_DOWN:     return QString("ACC_DOWN");
+                case PACKAGE_STATUS_LANDED:         return QString("LANDED");
+                default:                            return QString("%1").arg(packages[row].p.reg);
+                }
+                break;
+            case PACKAGE_TYPE_ERROR:
+                switch (packages[row].p.reg) {
+                case PACKAGE_ERROR_CALIBRATE:   return QString("CALIBR");
+                case PACKAGE_ERROR_DEPLOY:      return QString("PARACH");
+                case PACKAGE_ERROR_MEMORY:      return QString("MEM");
+                case PACKAGE_ERROR_START:       return QString("START");
+                default:                        return QString("%1").arg(packages[row].p.reg);
+                }
+                break;
+            }
         case COL_LENGTH:
             return QString("%1").arg(packages[row].p.length);
         case COL_ACK:
