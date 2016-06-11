@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>438</width>
-    <height>309</height>
+    <height>341</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -66,7 +66,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_flight">
        <attribute name="title">
@@ -74,7 +74,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QVBoxLayout" name="group_data" stretch="1,0,0,5">
+         <layout class="QVBoxLayout" name="group_data" stretch="1,0,0,0">
           <item>
            <widget class="QLCDNumber" name="lcd_timer"/>
           </item>
@@ -93,7 +93,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTableWidget" name="tbl_data"/>
+           <widget class="QTableView" name="tbl_data"/>
           </item>
          </layout>
         </item>
@@ -127,8 +127,6 @@
         </item>
        </layout>
        <zorder></zorder>
-       <zorder>verticalLayoutWidget</zorder>
-       <zorder>verticalLayoutWidget_2</zorder>
       </widget>
       <widget class="QWidget" name="tab_messages">
        <attribute name="title">
@@ -150,10 +148,10 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QTableWidget" name="tbl_msgin"/>
+         <widget class="QTableView" name="tbl_msgin"/>
         </item>
         <item row="1" column="1">
-         <widget class="QTableWidget" name="tbl_msgout"/>
+         <widget class="QTableView" name="tbl_msgout"/>
         </item>
        </layout>
       </widget>

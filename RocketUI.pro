@@ -36,7 +36,8 @@ HEADERS  += mainwindow.h \
     EMBcomm/HAL_Serial.h \
     EMBcomm/HAL_Memory.h \
     EMBcomm/Comm.h \
-    serialinterface.h
+    serialinterface.h \
+    RocketComm_Defs.h
 
 FORMS += \
     mainwindow.ui
