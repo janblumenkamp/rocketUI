@@ -47,18 +47,37 @@ MainWindow::MainWindow(QWidget *parent) :
     Comm_Init(&comm, &m_in, &m_out, (uint32_t (*)(void *))MainWindow::getTimeMS, this);
 
     ui->plot_flight->addGraph();
-    ui->plot_flight->graph(0)->setData(height_time, height_history);
+    /*ui->plot_flight->graph(0)->setData(height_time, height_history);
     ui->plot_flight->xAxis->setLabel("t in s");
     ui->plot_flight->yAxis->setLabel("Height in m");
     //ui->plot_flight->setBackground(Qt::transparent);
-    //ui->plot_flight->setAttribute(Qt::WA_OpaquePaintEvent, false);
+    //ui->plot_flight->setAttribute(Qt::WA_OpaquePaintEvent, false);*/
 
     flightdatamodel = new FlightdataModel(0);
     ui->tbl_flightdata->setModel(flightdatamodel);
 
+    msgtblmdl_in = new MSGTableModel(0);
+    ui->tbl_msgin->setModel(msgtblmdl_in);
+    msgtblmdl_out = new MSGTableModel(0);
+    ui->tbl_msgout->setModel(msgtblmdl_out);
+
     flightdatamodel->addData(PACKAGE_DATA_ACC_X, 1.5);
     flightdatamodel->addData(PACKAGE_DATA_ACC_X, 0.5);
 
+    Comm_Package_t pack;
+    pack.id = 1234;
+    pack.length = 12;
+    pack.type = PACKAGE_TYPE_CMD;
+    pack.reg = PACKAGE_CMD_CALIBRATE;
+    msgtblmdl_in->addData(&pack);
+
+    pack.id = 2345;
+    pack.length = 33;
+    pack.type = PACKAGE_TYPE_STATUS;
+    pack.reg = PACKAGE_STATUS_IDLE;
+    msgtblmdl_in->addData(&pack);
+
+    ui->lcd_timer->display(QString("T-00:00:000"));
    /* QStringList tableHeader_data;
     tableHeader_data << "Item" << "Is" << "Max";
     ui->tbl_data->setColumnCount(tableHeader_data.count());
@@ -81,21 +100,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(sinterface, SIGNAL(receivedByte(int8_t)), this, SLOT(receivedByte(int8_t)));
 }
 
-/*
- *
- * Destruktor
- */
 MainWindow::~MainWindow()
 {
     delete sinterface;
 	delete ui;
     delete flightdatamodel;
+    delete msgtblmdl_in;
+    delete msgtblmdl_out;
 }
 
-/*
- * Verbindung zum Refresh Button, lädt die Portliste der verfügbaren Comports
- *
- */
 void MainWindow::refreshPortList()
 {
 	ui->cmb_serialPorts->clear();
@@ -108,10 +121,6 @@ void MainWindow::refreshPortList()
     ui->cmb_serialPorts->addItem("ttypts0");
 }
 
-/*
- * Connection zum Open Button, verbindet mit dem seriellen Port
- *
- */
 void MainWindow::serialOpenPort()
 {
 	if(ui->cmb_serialPorts->currentText() != "")
@@ -140,10 +149,6 @@ void MainWindow::calibrate()
     Comm_SendAllPackages(&comm);
 }
 
-/*
- * Connection zum Close Button, schließt den seriellen Port
- *
- */
 void MainWindow::serialClosePort()
 {
     sinterface->closePort();
@@ -173,7 +178,7 @@ void MainWindow::receivedByte(int8_t byte)
  */
 void MainWindow::updateTempGraph(void)
 {
-    if(sinterface->isConnected())
+    /*if(sinterface->isConnected())
 	{
 		using namespace std;
         double height_max = *max_element(height_history.begin(), height_history.end());
@@ -186,5 +191,5 @@ void MainWindow::updateTempGraph(void)
         ui->plot_flight->yAxis2->setRange(height_min - 2, height_max + 2); // yAxis 2 ist die rechte Y-Achse. yAxis 1 ist deaktiviert, aber alle Werte bezeiehn sich auf diese Achse, wewegen bei beiden die Range eingestellt werden muss
         ui->plot_flight->yAxis->setRange(height_min - 2, height_max + 2);
         ui->plot_flight->replot();
-	}
+    }*/
 }

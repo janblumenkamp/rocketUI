@@ -5,6 +5,7 @@
 #include <QTime>
 
 #include "flightdatamodel.h"
+#include "msgtablemodel.h"
 #include "serialinterface.h"
 
 extern "C" {
@@ -37,6 +38,8 @@ private:
     SerialInterface *sinterface;
 
     FlightdataModel *flightdatamodel;
+    MSGTableModel *msgtblmdl_out;
+    MSGTableModel *msgtblmdl_in;
 
     QTime timer_start; // Stores time since system start
 
@@ -45,9 +48,6 @@ private:
     MemoryEntry_t mementr_in[MEMORY_IN_LENGTH/MEMORY_INOUT_ALIGN];
     MemoryEntry_t mementr_out[MEMORY_OUT_LENGTH/MEMORY_INOUT_ALIGN];
 
-    double height;
-
-    QVector<double> height_history, height_time;
 private slots:
     void refreshPortList();
     void serialOpenPort();

@@ -72,27 +72,27 @@
        <attribute name="title">
         <string>Flight</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1">
         <item>
-         <layout class="QVBoxLayout" name="group_data" stretch="1,0,0,0">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
            <widget class="QLCDNumber" name="lcd_timer"/>
           </item>
-          <item>
+          <item row="1" column="0">
            <widget class="QPushButton" name="btn_calibrate">
             <property name="text">
              <string>Calibrate</string>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="2" column="0">
            <widget class="QPushButton" name="btn_launch">
             <property name="text">
              <string>LAUNCH</string>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="3" column="0">
            <widget class="QTableView" name="tbl_flightdata"/>
           </item>
          </layout>
