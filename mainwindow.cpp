@@ -10,11 +10,14 @@
 #include <vector>
 #include <algorithm>
 
+#include "RocketComm_Defs.h"
+
 extern "C" {
     #include "EMBcomm/HAL_Memory.h"
     #include "EMBcomm/HAL_Serial.h"
     #include "EMBcomm/Memory.h"
     #include "EMBcomm/Comm.h"
+    #include "EMBcomm/PackageMemory.h"
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -51,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //ui->plot_flight->setBackground(Qt::transparent);
     //ui->plot_flight->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
-    QStringList tableHeader_data;
+   /* QStringList tableHeader_data;
     tableHeader_data << "Item" << "Is" << "Max";
     ui->tbl_data->setColumnCount(tableHeader_data.count());
     ui->tbl_data->setHorizontalHeaderLabels(tableHeader_data);
@@ -61,12 +64,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tbl_msgin->setColumnCount(tableHeader_msg.count());
     ui->tbl_msgin->setHorizontalHeaderLabels(tableHeader_msg);
     ui->tbl_msgout->setColumnCount(tableHeader_msg.count());
-    ui->tbl_msgout->setHorizontalHeaderLabels(tableHeader_msg);
+    ui->tbl_msgout->setHorizontalHeaderLabels(tableHeader_msg);*/
 
 	// Buttons
 	connect(ui->btn_refreshPortList, SIGNAL(clicked()), this, SLOT(refreshPortList())); //Refresh Button (Liste der seriellen Ports)
     connect(ui->btn_connect, SIGNAL(clicked()), this, SLOT(serialOpenPort())); //Connect Button (Liste der seriellen Ports)
     connect(ui->btn_disconnect, SIGNAL(clicked()), this, SLOT(serialClosePort())); //Disconnect Button
+
+    connect(ui->btn_calibrate, SIGNAL(clicked()), this, SLOT(calibrate()));
 
     connect(sinterface, SIGNAL(receivedByte(int8_t)), this, SLOT(receivedByte(int8_t)));
 }
@@ -94,7 +99,7 @@ void MainWindow::refreshPortList()
 	}
 
     /////// ONLY FOR DEBUGGING PURPOSES - VIRTUAL SERIAL PORT!
-    ui->cmb_serialPorts->addItem("pts/5");
+    ui->cmb_serialPorts->addItem("ttypts0");
 }
 
 /*
@@ -107,7 +112,7 @@ void MainWindow::serialOpenPort()
 	{
         if(sinterface->openPort("/dev/" + ui->cmb_serialPorts->currentText())) // Vebindung konnte erfolgeich hergestellt werden
 		{
-			ui->lbl_current_state->setText("Connected");
+            ui->lbl_current_state->setText("Connected");
 			ui->btn_connect->setEnabled(false);
 			ui->btn_disconnect->setEnabled(true);
 		}
@@ -116,6 +121,17 @@ void MainWindow::serialOpenPort()
 			ui->lbl_current_state->setText("Failed");
 		}
 	}
+}
+
+void MainWindow::calibrate()
+{
+    Comm_Package_t p;
+    p.id = 1111;
+    p.length = 0;
+    p.type = PACKAGE_TYPE_CMD;
+    p.reg = PACKAGE_CMD_CALIBRATE;
+    PackageMemory_ToMemory(comm.m_out, &p);
+    Comm_SendAllPackages(&comm);
 }
 
 /*

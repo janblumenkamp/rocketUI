@@ -49,6 +49,7 @@ private slots:
     void serialOpenPort();
     void serialClosePort();
 
+    void calibrate();
     /*void led0_commRefresh(int val); // Änderung der Werte in den LEDs
 	void led1_commRefresh(int val);
 	void led2_commRefresh(int val);
