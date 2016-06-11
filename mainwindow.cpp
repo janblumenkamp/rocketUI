@@ -10,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 
+#include "flightdatamodel.h"
 #include "RocketComm_Defs.h"
 
 extern "C" {
@@ -54,6 +55,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //ui->plot_flight->setBackground(Qt::transparent);
     //ui->plot_flight->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
+    flightdatamodel = new FlightdataModel(0);
+    ui->tbl_flightdata->setModel(flightdatamodel);
+
    /* QStringList tableHeader_data;
     tableHeader_data << "Item" << "Is" << "Max";
     ui->tbl_data->setColumnCount(tableHeader_data.count());
@@ -84,6 +88,7 @@ MainWindow::~MainWindow()
 {
     delete sinterface;
 	delete ui;
+    delete flightdatamodel;
 }
 
 /*

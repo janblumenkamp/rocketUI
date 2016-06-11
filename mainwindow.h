@@ -4,7 +4,9 @@
 #include <QMainWindow>
 #include <QTime>
 
+#include "flightdatamodel.h"
 #include "serialinterface.h"
+
 extern "C" {
     #include "EMBcomm/Comm.h"
     #include "EMBcomm/HAL_Memory.h"
@@ -33,6 +35,8 @@ public:
 private:
 	Ui::MainWindow *ui;
     SerialInterface *sinterface;
+
+    FlightdataModel *flightdatamodel;
 
     QTime timer_start; // Stores time since system start
 

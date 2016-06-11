@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     EMBcomm/HAL_Memory.c \
     EMBcomm/Comm_Package.c \
     EMBcomm/Comm.c \
-    serialinterface.cpp
+    serialinterface.cpp \
+    flightdatamodel.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h \
     EMBcomm/HAL_Memory.h \
     EMBcomm/Comm.h \
     serialinterface.h \
-    RocketComm_Defs.h
+    RocketComm_Defs.h \
+    flightdatamodel.h
 
 FORMS += \
     mainwindow.ui
