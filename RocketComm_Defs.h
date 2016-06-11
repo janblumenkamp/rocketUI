@@ -1,0 +1,4 @@
+#ifndef ROCKETCOMM_DEFS_H
+#define ROCKETCOMM_DEFS_H
+
+#endif // ROCKETCOMM_DEFS_H
