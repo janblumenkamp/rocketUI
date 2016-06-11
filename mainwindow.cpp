@@ -5,9 +5,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QSerialPortInfo>
-#include <qmath.h>
 #include <QTime>
-#include <vector>
 #include <algorithm>
 
 #include "flightdatamodel.h"
@@ -57,6 +55,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     flightdatamodel = new FlightdataModel(0);
     ui->tbl_flightdata->setModel(flightdatamodel);
+
+    flightdatamodel->addData(PACKAGE_DATA_ACC_X, 1.5);
+    flightdatamodel->addData(PACKAGE_DATA_ACC_X, 0.5);
 
    /* QStringList tableHeader_data;
     tableHeader_data << "Item" << "Is" << "Max";

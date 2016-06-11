@@ -2,15 +2,33 @@
 #define FLIGHTDATAMODEL_H
 
 #include <QAbstractTableModel>
+#include <QVector>
+#include <algorithm>
+#include <vector>
 
-class FlightdataModel : public QAbstractTableModel
-{
+#include "RocketComm_Defs.h"
+
+class FlightdataModel : public QAbstractTableModel {
     Q_OBJECT
+
+    enum COLUMNS {
+        COL_IS, COL_MIN, COL_MAX,
+        ///
+        COL_NUM
+    };
+
+    QVector<double> flightdata[PACKAGE_DATA_NUM];
+
 public:
     FlightdataModel(QObject *parent);
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    ~FlightdataModel();
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const ;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+    void addData(package_type_data_t i, double value);
 };
 
 #endif // FLIGHTDATAMODEL_H
