@@ -3,9 +3,12 @@
 #include <algorithm>
 
 #include "flightdatamodel.h"
+#include "flightdataxmlreader.h"
 
 FlightdataModel::FlightdataModel(QObject *parent) :
     QAbstractTableModel(parent) {
+    xmlparser = new FlightDataXMLReader("../RocketUI/commdef.xml");
+    xmlparser->read();
 }
 
 FlightdataModel::~FlightdataModel() {

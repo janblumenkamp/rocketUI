@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "RocketComm_Defs.h"
+#include "flightdataxmlreader.h"
 
 class FlightdataModel : public QAbstractTableModel {
     Q_OBJECT
@@ -18,6 +19,7 @@ class FlightdataModel : public QAbstractTableModel {
     };
 
     QVector<double> flightdata[PACKAGE_DATA_NUM];
+    FlightDataXMLReader *xmlparser;
 
 public:
     FlightdataModel(QObject *parent);

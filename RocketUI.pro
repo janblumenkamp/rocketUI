@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     EMBcomm/Comm.c \
     serialinterface.cpp \
     flightdatamodel.cpp \
-    msgtablemodel.cpp
+    msgtablemodel.cpp \
+    flightdataxmlreader.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     serialinterface.h \
     RocketComm_Defs.h \
     flightdatamodel.h \
-    msgtablemodel.h
+    msgtablemodel.h \
+    flightdataxmlreader.h
 
 FORMS += \
     mainwindow.ui
