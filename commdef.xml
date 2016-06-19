@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commdef>
+<data>
+  <id>0</id>
+  <specifier>PACKAGE_DATA_ALTITUDE</specifier>
+  <short>ALT</short>
+  <description>Altitude</description>
+</data>
+<data>
+  <id>1</id>
+  <specifier>PACKAGE_DATA_SPEED_VERT</specifier>
+  <short>SPEED_VERT</short>
+  <description>Vertical speed</description>
+</data>
+<cmd>
+  <id>0</id>
+  <specifier>PACKAGE_CMD_SET_STREAM</specifier>
+  <short>SET_STREAM</short>
+  <description>Set stream</description>
+</cmd>
+</commdef>
