@@ -106,7 +106,7 @@ QVariant MSGTableModel::data(const QModelIndex &index, int role) const {
             }
         case COL_LENGTH:
             return QString("%1").arg(packages[row].p.length);
-        case COL_ACK:
+        case COL_ACK: //Handled in CheckStateRole
             break;
         }
     } else if(role == Qt::CheckStateRole) {
@@ -114,10 +114,10 @@ QVariant MSGTableModel::data(const QModelIndex &index, int role) const {
             if(!packages[row].ack) {
                 if(PackageMemory_GetMemID(mem, packages[row].p.id) < 0) {
                     // The package ID was not found in the memory, that means the entry is not available anymore and therefore an ack received.
-                    //packages[row].ack = 1;
+                    //packages[row].ack = true;
                 }
             }
-            return packages[row].ack ? Qt::Checked : Qt::Unchecked;
+            return packages[row].ack == true ? Qt::Checked : Qt::Unchecked;
         }
     }
     return QVariant();
@@ -132,6 +132,7 @@ void MSGTableModel::addData(Comm_Package_t *p) {
     }
     Package_t pck;
     pck.p = *p;
+    pck.ack = false;
     packages.push_back(pck);
 }
 

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTime>
+#include <QTimer>
 
 #include "flightdatamodel.h"
 #include "msgtablemodel.h"
@@ -18,6 +19,9 @@ extern "C" {
 #define MEMORY_OUT_START    MEMORY_IN_START+MEMORY_IN_LENGTH
 #define MEMORY_OUT_LENGTH   MEM_LENGTH/2
 #define MEMORY_INOUT_ALIGN  64
+
+#define TIMER_LAUNCH_DISPLAY_FORMAT "mm:ss.zzz"
+#define TIMER_LAUNCH_INCREMENT_MS 20
 
 namespace Ui {
 class MainWindow;
@@ -41,12 +45,16 @@ private:
     MSGTableModel *msgtblmdl_out;
     MSGTableModel *msgtblmdl_in;
 
-    QTime timer_start; // Stores time since system start
+    QTime time_since_start; // Stores time since system start
+    QTime time_since_launch;
+    QTimer *timer_launch; // Time since launch
 
     Comm_t comm;
     Memory_t m_in, m_out;
     MemoryEntry_t mementr_in[MEMORY_IN_LENGTH/MEMORY_INOUT_ALIGN];
     MemoryEntry_t mementr_out[MEMORY_OUT_LENGTH/MEMORY_INOUT_ALIGN];
+
+    int16_t pack_id_calibrate; //Store the message ID of the calibration command to verify calibration (ack) and only then activate the launch button
 
 private slots:
     void refreshPortList();
@@ -54,10 +62,9 @@ private slots:
     void serialClosePort();
 
     void calibrate();
-    /*void led0_commRefresh(int val); // Änderung der Werte in den LEDs
-	void led1_commRefresh(int val);
-	void led2_commRefresh(int val);
-    void led3_commRefresh(int val);*/
+    void launch();
+
+    void timer_launch_event(); //Timer to refresh the time stop
 
     void receivedByte(int8_t byte);
 

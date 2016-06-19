@@ -48,7 +48,7 @@
        <widget class="QComboBox" name="cmb_serialPorts"/>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="lbl_current_state">
+       <widget class="QLabel" name="lbl_commstate">
         <property name="text">
          <string>Not connected</string>
         </property>
@@ -66,7 +66,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_flight">
        <attribute name="title">
@@ -84,7 +84,7 @@
              <bool>false</bool>
             </property>
             <property name="digitCount">
-             <number>8</number>
+             <number>9</number>
             </property>
             <property name="segmentStyle">
              <enum>QLCDNumber::Filled</enum>
@@ -103,6 +103,9 @@
           </item>
           <item row="2" column="0">
            <widget class="QPushButton" name="btn_launch">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>LAUNCH</string>
             </property>
@@ -114,14 +117,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="group_plot" stretch="0,1,0">
-          <item>
-           <widget class="QLabel" name="lbl_flightplot">
-            <property name="text">
-             <string>Flightplot:</string>
-            </property>
-           </widget>
-          </item>
+         <layout class="QVBoxLayout" name="group_plot" stretch="1,0">
           <item>
            <widget class="QCustomPlot" name="plot_flight" native="true">
             <property name="minimumSize">
@@ -135,7 +131,7 @@
           <item>
            <widget class="QLabel" name="lbl_flightstate">
             <property name="text">
-             <string>Status</string>
+             <string/>
             </property>
            </widget>
           </item>

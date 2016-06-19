@@ -21,8 +21,8 @@ extern "C" {
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
+
     ui->setupUi(this);
 
     QFile f(":qdarkstyle/style.qss");
@@ -38,7 +38,13 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     sinterface = new SerialInterface();
-    timer_start.start();
+
+    time_since_start.start();
+
+    time_since_launch.setHMS(0, 0, 0);
+
+    timer_launch = new QTimer();
+    connect(timer_launch, SIGNAL(timeout()), this, SLOT(timer_launch_event()));
 
     HAL_Memory_Init();
     HAL_Serial_InitWriteString((void (*)(void *, int8_t *, uint16_t))SerialInterface::static_writeString, this);
@@ -59,25 +65,14 @@ MainWindow::MainWindow(QWidget *parent) :
     msgtblmdl_in = new MSGTableModel(0, comm.m_in);
     ui->tbl_msgin->setModel(msgtblmdl_in);
     ui->tbl_msgin->verticalHeader()->hide();
+
     msgtblmdl_out = new MSGTableModel(0, comm.m_out);
     ui->tbl_msgout->setModel(msgtblmdl_out);
     ui->tbl_msgout->verticalHeader()->hide();
 
-    flightdatamodel->addData(PACKAGE_DATA_ACC_X, 1.5);
-    flightdatamodel->addData(PACKAGE_DATA_ACC_X, 0.5);
+    ui->lcd_timer->display(time_since_launch.toString(TIMER_LAUNCH_DISPLAY_FORMAT));
 
-    ui->lcd_timer->display(QString("T-00:00:000"));
-   /* QStringList tableHeader_data;
-    tableHeader_data << "Item" << "Is" << "Max";
-    ui->tbl_data->setColumnCount(tableHeader_data.count());
-    ui->tbl_data->setHorizontalHeaderLabels(tableHeader_data);
-
-    QStringList tableHeader_msg;
-    tableHeader_msg << "ID" << "Type" << "Reg" << "Length";
-    ui->tbl_msgin->setColumnCount(tableHeader_msg.count());
-    ui->tbl_msgin->setHorizontalHeaderLabels(tableHeader_msg);
-    ui->tbl_msgout->setColumnCount(tableHeader_msg.count());
-    ui->tbl_msgout->setHorizontalHeaderLabels(tableHeader_msg);*/
+    ui->lbl_flightstate->setText("Please calibrate");
 
 	// Buttons
 	connect(ui->btn_refreshPortList, SIGNAL(clicked()), this, SLOT(refreshPortList())); //Refresh Button (Liste der seriellen Ports)
@@ -85,24 +80,23 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btn_disconnect, SIGNAL(clicked()), this, SLOT(serialClosePort())); //Disconnect Button
 
     connect(ui->btn_calibrate, SIGNAL(clicked()), this, SLOT(calibrate()));
+    connect(ui->btn_launch, SIGNAL(clicked()), this, SLOT(launch()));
 
     connect(sinterface, SIGNAL(receivedByte(int8_t)), this, SLOT(receivedByte(int8_t)));
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete sinterface;
 	delete ui;
     delete flightdatamodel;
     delete msgtblmdl_in;
     delete msgtblmdl_out;
+    delete timer_launch;
 }
 
-void MainWindow::refreshPortList()
-{
+void MainWindow::refreshPortList() {
 	ui->cmb_serialPorts->clear();
-	Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts())
-	{
+    Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) {
 	   ui->cmb_serialPorts->addItem(port.portName());
 	}
 
@@ -110,52 +104,74 @@ void MainWindow::refreshPortList()
     ui->cmb_serialPorts->addItem("ttypts0");
 }
 
-void MainWindow::serialOpenPort()
-{
-	if(ui->cmb_serialPorts->currentText() != "")
-	{
-        if(sinterface->openPort("/dev/" + ui->cmb_serialPorts->currentText())) // Vebindung konnte erfolgeich hergestellt werden
-		{
-            ui->lbl_current_state->setText("Connected");
+void MainWindow::serialOpenPort() {
+    if(ui->cmb_serialPorts->currentText() != "") {
+        if(sinterface->openPort("/dev/" + ui->cmb_serialPorts->currentText())) {
+            ui->lbl_commstate->setText("Connected");
 			ui->btn_connect->setEnabled(false);
 			ui->btn_disconnect->setEnabled(true);
-		}
-		else
-		{
-			ui->lbl_current_state->setText("Failed");
+        } else {
+            ui->lbl_commstate->setText("Failed");
 		}
 	}
 }
 
-void MainWindow::calibrate()
-{
+void MainWindow::calibrate() {
     Comm_Package_t p;
     p.id = 1111;
     p.length = 0;
     p.type = PACKAGE_TYPE_CMD;
     p.reg = PACKAGE_CMD_CALIBRATE;
+    pack_id_calibrate = p.id;
     msgtblmdl_out->send(&p);
     Comm_SendAllPackages(&comm);
+
+    ui->lbl_flightstate->setText("Calibration initiated");
+    ui->btn_calibrate->setEnabled(false);
+    ui->btn_launch->setEnabled(true);
 }
 
-void MainWindow::serialClosePort()
-{
+void MainWindow::launch() {
+    if(1){//PackageMemory_GetMemID(comm.m_out, pack_id_calibrate) < 0) {
+        // Message not in memory anymore, that means the ack was received.
+
+        Comm_Package_t p;
+        p.id = 1122;
+        p.length = 0;
+        p.type = PACKAGE_TYPE_CMD;
+        p.reg = PACKAGE_CMD_START;
+        msgtblmdl_out->send(&p);
+        Comm_SendAllPackages(&comm);
+
+        ui->lbl_flightstate->setText("Sent launch command");
+        timer_launch->start(TIMER_LAUNCH_INCREMENT_MS);
+        ui->btn_launch->setEnabled(false);
+    } else {
+        ui->lbl_flightstate->setText("Waiting for calibration ack");
+    }
+}
+
+void MainWindow::timer_launch_event() {
+    time_since_launch = time_since_launch.addMSecs(timer_launch->interval());
+    ui->lcd_timer->display(time_since_launch.toString(TIMER_LAUNCH_DISPLAY_FORMAT));
+}
+
+void MainWindow::serialClosePort() {
     sinterface->closePort();
 	ui->btn_connect->setEnabled(true);
 	ui->btn_disconnect->setEnabled(false);
-	ui->lbl_current_state->setText("Not connected");
+    ui->lbl_commstate->setText("Not connected");
 }
 
 uint32_t MainWindow::getTimeMS(MainWindow *w) {
-    return w->timer_start.elapsed();
+    return w->time_since_start.elapsed();
 }
 
 /*
  * Neues Paket von der Comm Klasse empfangen
  *
  */
-void MainWindow::receivedByte(int8_t byte)
-{
+void MainWindow::receivedByte(int8_t byte) {
     qDebug() << "rec b " << byte;
     Comm_Parser(&comm, byte);
 }
@@ -165,8 +181,7 @@ void MainWindow::receivedByte(int8_t byte)
  * Neu zeichnen
  *
  */
-void MainWindow::updateTempGraph(void)
-{
+void MainWindow::updateTempGraph(void) {
     /*if(sinterface->isConnected())
 	{
 		using namespace std;
