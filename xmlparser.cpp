@@ -2,21 +2,27 @@
 #include <QXmlStreamReader>
 #include <QString>
 #include <QDebug>
+#include <QVector>
 
-#include "flightdataxmlreader.h"
+#include "xmlparser.h"
 
-FlightDataXMLReader::FlightDataXMLReader(const QString filename):
+XMLParser::XMLParser(const QString filename, const QString firstlevel, callback_t callback, void *userdata):
     _filename(filename)
 {
+    _firstlevel = firstlevel;
+    _callback = callback;
+    _callback_userdata = userdata;
 }
 
-void FlightDataXMLReader::read() {
+void XMLParser::read() {
     QFile xmlFile(_filename);
     xmlFile.open(QIODevice::ReadOnly);
     _xml.setDevice(&xmlFile);
 
-    if (_xml.readNextStartElement() && _xml.name() == "commdef") {
-       processCommdef();
+    if (_xml.readNextStartElement() && _xml.name() == _firstlevel) {
+        while (_xml.readNextStartElement()) {
+            processContent();
+        }
     }
 
     // readNextStartElement() leaves the stream in
@@ -32,52 +38,31 @@ void FlightDataXMLReader::read() {
     }
 }
 
-void FlightDataXMLReader::processCommdef() {
-    if (!_xml.isStartElement()) {
-        return;
-    }
-    while (_xml.readNextStartElement()) {
-        if (_xml.name() == "data") {
-            processData();
-        } else {
-            _xml.skipCurrentElement();
-        }
-    }
-}
-
-void FlightDataXMLReader::processData() {
+void XMLParser::processContent() {
     if (!_xml.isStartElement()) {
         return;
     }
 
-    QString entry_id;
-    QString entry_specifier;
-    QString entry_short;
-    QString entry_description;
+    _currententrys.clear();
+    _currententrys.resize(2);
+    _currentidentifier = _xml.name().toString();
+
     while (_xml.readNextStartElement()) {
-        if (_xml.name() == "id") {
-            entry_id = readNextText();
-        } else if (_xml.name() == "specifier") {
-            entry_specifier = readNextText();
-        } else if (_xml.name() == "short") {
-            entry_short = readNextText();
-        } else if (_xml.name() == "description") {
-            entry_description = readNextText();
-        }
+
+        _currententrys[0].push_back(_xml.name().toString());
+
+        _xml.readNext();
+        _currententrys[1].push_back(_xml.text().toString());
+
         _xml.skipCurrentElement();
     }
 
-    if (!(entry_id.isEmpty() || entry_specifier.isEmpty() || entry_short.isEmpty() || entry_description.isEmpty())) {
-        qDebug() << entry_id << entry_specifier << entry_short << entry_description;
+    if(_callback != NULL) {
+        _callback(_currentidentifier, _currententrys, _callback_userdata);
     }
 }
 
-QString FlightDataXMLReader::readNextText() {
-    _xml.readNext();
-    return _xml.text().toString();
-}
-
-QString FlightDataXMLReader::errorString() {
+QString XMLParser::errorString() {
     return QObject::tr("%1\nLine %2, column %3")
             .arg(_xml.errorString())
             .arg(_xml.lineNumber())

@@ -3,15 +3,25 @@
 #include <algorithm>
 
 #include "flightdatamodel.h"
-#include "flightdataxmlreader.h"
+#include "xmlparser.h"
 
 FlightdataModel::FlightdataModel(QObject *parent) :
     QAbstractTableModel(parent) {
-    xmlparser = new FlightDataXMLReader("../RocketUI/commdef.xml");
+    xmlparser = new XMLParser("commdef.xml",
+                              "commdef",
+                              (XMLParser::callback_t) FlightdataModel::xmlcallback,
+                              this);
     xmlparser->read();
 }
 
 FlightdataModel::~FlightdataModel() {
+    delete xmlparser;
+}
+
+void FlightdataModel::xmlcallback(QString &identfier, QVector< QVector<QString> > &entrys, FlightdataModel *flightdatamodel) {
+    qDebug() << identfier;
+    qDebug() << entrys[0][0] << entrys[0][1] << entrys[0][2] << entrys[0][3];
+    qDebug() << entrys[1][0] << entrys[1][1] << entrys[1][2] << entrys[1][3];
 }
 
 int FlightdataModel::rowCount(const QModelIndex & /*parent*/) const {

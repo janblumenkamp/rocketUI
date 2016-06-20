@@ -7,10 +7,13 @@
 #include <vector>
 
 #include "RocketComm_Defs.h"
-#include "flightdataxmlreader.h"
+#include "xmlparser.h"
 
 class FlightdataModel : public QAbstractTableModel {
     Q_OBJECT
+
+private:
+    static void xmlcallback(QString &identfier, QVector< QVector<QString> > &entrys, FlightdataModel *flightdatamodel);
 
     enum COLUMNS {
         COL_IS, COL_MIN, COL_MAX,
@@ -19,7 +22,7 @@ class FlightdataModel : public QAbstractTableModel {
     };
 
     QVector<double> flightdata[PACKAGE_DATA_NUM];
-    FlightDataXMLReader *xmlparser;
+    XMLParser *xmlparser;
 
 public:
     FlightdataModel(QObject *parent);

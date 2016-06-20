@@ -28,7 +28,7 @@ SOURCES += main.cpp\
     serialinterface.cpp \
     flightdatamodel.cpp \
     msgtablemodel.cpp \
-    flightdataxmlreader.cpp
+    xmlparser.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -43,7 +43,7 @@ HEADERS  += mainwindow.h \
     RocketComm_Defs.h \
     flightdatamodel.h \
     msgtablemodel.h \
-    flightdataxmlreader.h
+    xmlparser.h
 
 FORMS += \
     mainwindow.ui

@@ -2,29 +2,37 @@
  * http://3gfp.com/wp/2014/07/three-ways-to-parse-xml-in-qt/
  */
 
-#ifndef FLIGHTDATAXMLREADER_H
-#define FLIGHTDATAXMLREADER_H
+#ifndef XMLPARSER_H
+#define XMLPARSER_H
 
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QString>
 #include <QDebug>
+#include <QVector>
 
-class FlightDataXMLReader
+class XMLParser
 {
 public:
-    FlightDataXMLReader(const QString filename);
+    typedef void (*callback_t)(QString &identfier, QVector< QVector<QString> > &entrys, void *userdata);
+
+    XMLParser(const QString filename, const QString firstlevel, callback_t callback, void *userdata);
 
     void read();
 
 private:
-    void processCommdef();
-    void processData();
-    QString readNextText();
+    callback_t _callback;
+
+    void *_callback_userdata;
+    QVector< QVector<QString> > _currententrys;
+    QString _currentidentifier;
+
+    void processContent();
     QString errorString();
 
     QString _filename;
+    QString _firstlevel;
     QXmlStreamReader _xml;
 };
 
-#endif // FLIGHTDATAXMLREADER_H
+#endif // XMLPARSER_H
