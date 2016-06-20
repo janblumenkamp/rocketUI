@@ -18,14 +18,15 @@ FlightdataModel::~FlightdataModel() {
     delete xmlparser;
 }
 
-void FlightdataModel::xmlcallback(QString &identfier, QVector< QVector<QString> > &entrys, FlightdataModel *flightdatamodel) {
-    qDebug() << identfier;
-    qDebug() << entrys[0][0] << entrys[0][1] << entrys[0][2] << entrys[0][3];
-    qDebug() << entrys[1][0] << entrys[1][1] << entrys[1][2] << entrys[1][3];
+void FlightdataModel::xmlcallback(QString &identifier, QVector< QVector<QString> > &entrys, FlightdataModel *flightdatamodel) {
+    if(identifier == "data") {
+        flightdatamodel->labeldata.append(entrys[1][3]);
+        flightdatamodel->unitdata.append(entrys[1][4]);
+    }
 }
 
 int FlightdataModel::rowCount(const QModelIndex & /*parent*/) const {
-   return PACKAGE_DATA_NUM;
+   return labeldata.length();
 }
 
 int FlightdataModel::columnCount(const QModelIndex & /*parent*/) const {
@@ -39,23 +40,11 @@ QVariant FlightdataModel::headerData(int section, Qt::Orientation orientation, i
             case COL_IS:    return QString("Is");
             case COL_MIN:   return QString("Min");
             case COL_MAX:   return QString("Max");
+            case COL_UNIT:  return QString("Unit");
             }
         }
         if (orientation == Qt::Vertical) {
-            switch (section) {
-            case PACKAGE_DATA_ALTITUDE:     return QString("Altitude");
-            case PACKAGE_DATA_SPEED_VERT:   return QString("Vert. Speed");
-            case PACKAGE_DATA_ACC_X:        return QString("Acc X");
-            case PACKAGE_DATA_ACC_Y:        return QString("Acc Y");
-            case PACKAGE_DATA_ACC_Z:        return QString("Acc Z");
-            case PACKAGE_DATA_GYR_X:        return QString("Gyr X");
-            case PACKAGE_DATA_GYR_Y:        return QString("Gyr Y");
-            case PACKAGE_DATA_GYR_Z:        return QString("Gyr Z");
-            case PACKAGE_DATA_IMU_X:        return QString("IMU X");
-            case PACKAGE_DATA_IMU_Y:        return QString("IMU Y");
-            case PACKAGE_DATA_IMU_Z:        return QString("IMU Z");
-            case PACKAGE_DATA_TEMPERATURE:  return QString("Temp");
-            }
+            return labeldata[section];
         }
     }
     return QVariant();
@@ -63,7 +52,9 @@ QVariant FlightdataModel::headerData(int section, Qt::Orientation orientation, i
 
 QVariant FlightdataModel::data(const QModelIndex &index, int role) const {
     if (role == Qt::DisplayRole) {
-        if(flightdata[index.row()].isEmpty()) {
+        if(index.column() == COL_UNIT) {
+            return unitdata[index.row()];
+        } else if(flightdata[index.row()].isEmpty()) {
             return QString("None");
         } else {
             double val;

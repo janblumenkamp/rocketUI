@@ -16,13 +16,16 @@ private:
     static void xmlcallback(QString &identfier, QVector< QVector<QString> > &entrys, FlightdataModel *flightdatamodel);
 
     enum COLUMNS {
-        COL_IS, COL_MIN, COL_MAX,
+        COL_IS, COL_MIN, COL_MAX, COL_UNIT,
         ///
         COL_NUM
     };
 
     QVector<double> flightdata[PACKAGE_DATA_NUM];
     XMLParser *xmlparser;
+
+    QVector<QString> labeldata; // The labels are arsed from the xml file into this vector.
+    QVector<QString> unitdata; // The units as string
 
 public:
     FlightdataModel(QObject *parent);
