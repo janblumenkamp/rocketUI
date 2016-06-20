@@ -24,8 +24,8 @@ private:
     QVector<double> flightdata[PACKAGE_DATA_NUM];
     XMLParser *xmlparser;
 
-    QVector<QString> labeldata; // The labels are arsed from the xml file into this vector.
-    QVector<QString> unitdata; // The units as string
+    QVector<QString> label_data; // The labels are arsed from the xml file into this vector.
+    QVector<QString> label_unit; // The units as string
 
 public:
     FlightdataModel(QObject *parent);

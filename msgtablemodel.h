@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include "RocketComm_Defs.h"
+#include "xmlparser.h"
 
 extern "C" {
     #include "EMBcomm/Comm_Package.h"
@@ -15,8 +16,15 @@ extern "C" {
 class MSGTableModel : public QAbstractTableModel
 {
     Q_OBJECT
-
+private:
     #define MAX_ENTRYS 1000
+
+#define CALLBACK_ENTRY_OFFSET_DATA_SHORT 3
+#define CALLBACK_ENTRY_OFFSET_STATUS_SHORT 2
+#define CALLBACK_ENTRY_OFFSET_ERROR_SHORT 2
+#define CALLBACK_ENTRY_OFFSET_CMD_SHORT 2
+
+    static void xmlcallback(QString &identfier, QVector< QVector<QString> > &entrys, MSGTableModel *msgtable);
 
     enum COLUMNS {
         COL_ID, COL_TYPE, COL_REG, COL_LENGTH, COL_ACK,
@@ -31,8 +39,11 @@ class MSGTableModel : public QAbstractTableModel
     typedef struct Package_t Package_t;
 
     QVector<Package_t> packages;
+    XMLParser *xmlparser;
 
     Memory_t *mem;
+
+    QVector<QString> label_data, label_cmd, label_status, label_err;
 
 public:
     MSGTableModel(QObject *parent, Memory_t *m);

@@ -83,4 +83,94 @@
         <description>Temperature</description>
         <unit>deg Celsius</unit>
     </data>
+    <cmd>
+        <id>0</id>
+        <specifier>PACKAGE_CMD_SET_STREAM</specifier>
+        <short>SET STREAM</short>
+        <description>Enable/disable stream</description>
+    </cmd>
+    <cmd>
+        <id>1</id>
+        <specifier>PACKAGE_CMD_CALIBRATE</specifier>
+        <short>CALIBR</short>
+        <description>Calibrate rocket prior to launch</description>
+    </cmd>
+    <cmd>
+        <id>2</id>
+        <specifier>PACKAGE_CMD_START</specifier>
+        <short>LAUNCH</short>
+        <description>Launch rocket</description>
+    </cmd>
+    <cmd>
+        <id>3</id>
+        <specifier>PACKAGE_CMD_DEPLOY_PARACHUTE</specifier>
+        <short>DEPL PARACHUTE</short>
+        <description>Deploy parachute manually</description>
+    </cmd>
+    <error>
+        <id>0</id>
+        <specifier>PACKAGE_ERROR_START</specifier>
+        <short>ERR START</short>
+        <description>Launch not possible</description>
+    </error>
+    <error>
+        <id>1</id>
+        <specifier>PACKAGE_ERROR_CALIBRATE</specifier>
+        <short>ERR CALIBR</short>
+        <description>Calibration not possible</description>
+    </error>
+    <error>
+        <id>2</id>
+        <specifier>PACKAGE_ERROR_DEPLOY</specifier>
+        <short>ERR DEPL</short>
+        <description>Parachute deploy not possible</description>
+    </error>
+    <error>
+        <id>3</id>
+        <specifier>PACKAGE_ERROR_MEMORY</specifier>
+        <short>ERR MEM</short>
+        <description>Memory error</description>
+    </error>
+    <status>
+        <id>0</id>
+        <specifier>PACKAGE_STATUS_IDLE</specifier>
+        <short>STAT IDLE</short>
+        <description>Rocket in idle state</description>
+    </status>
+    <status>
+        <id>1</id>
+        <specifier>PACKAGE_STATUS_ACCEL_UP</specifier>
+        <short>STAT ACC UP</short>
+        <description>Rocket accelerating up</description>
+    </status>
+    <status>
+        <id>2</id>
+        <specifier>PACKAGE_STATUS_DECEL_UP</specifier>
+        <short>STAT DEC UP</short>
+        <description>Rocket decelerating up</description>
+    </status>
+    <status>
+        <id>3</id>
+        <specifier>PACKAGE_STATUS_APO</specifier>
+        <short>STAT APO</short>
+        <description>Rocket reached apogee</description>
+    </status>
+    <status>
+        <id>4</id>
+        <specifier>PACKAGE_STATUS_PARACHUTE</specifier>
+        <short>STAT PAR</short>
+        <description>Rocket deployed parachute</description>
+    </status>
+    <status>
+        <id>5</id>
+        <specifier>PACKAGE_STATUS_ACCEL_DOWN</specifier>
+        <short>STAT ACC DOWN</short>
+        <description>Rocket accelerating down</description>
+    </status>
+    <status>
+        <id>6</id>
+        <specifier>PACKAGE_STATUS_LANDED</specifier>
+        <short>STAT LANDED</short>
+        <description>Rocket landed</description>
+    </status>
 </commdef>

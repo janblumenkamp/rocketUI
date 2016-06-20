@@ -20,13 +20,13 @@ FlightdataModel::~FlightdataModel() {
 
 void FlightdataModel::xmlcallback(QString &identifier, QVector< QVector<QString> > &entrys, FlightdataModel *flightdatamodel) {
     if(identifier == "data") {
-        flightdatamodel->labeldata.append(entrys[1][3]);
-        flightdatamodel->unitdata.append(entrys[1][4]);
+        flightdatamodel->label_data.append(entrys[1][3]);
+        flightdatamodel->label_unit.append(entrys[1][4]);
     }
 }
 
 int FlightdataModel::rowCount(const QModelIndex & /*parent*/) const {
-   return labeldata.length();
+   return label_data.length();
 }
 
 int FlightdataModel::columnCount(const QModelIndex & /*parent*/) const {
@@ -44,7 +44,7 @@ QVariant FlightdataModel::headerData(int section, Qt::Orientation orientation, i
             }
         }
         if (orientation == Qt::Vertical) {
-            return labeldata[section];
+            return label_data[section];
         }
     }
     return QVariant();
@@ -53,7 +53,7 @@ QVariant FlightdataModel::headerData(int section, Qt::Orientation orientation, i
 QVariant FlightdataModel::data(const QModelIndex &index, int role) const {
     if (role == Qt::DisplayRole) {
         if(index.column() == COL_UNIT) {
-            return unitdata[index.row()];
+            return label_unit[index.row()];
         } else if(flightdata[index.row()].isEmpty()) {
             return QString("None");
         } else {

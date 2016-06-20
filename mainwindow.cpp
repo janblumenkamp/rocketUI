@@ -98,10 +98,7 @@ void MainWindow::refreshPortList() {
 	ui->cmb_serialPorts->clear();
     Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) {
 	   ui->cmb_serialPorts->addItem(port.portName());
-	}
-
-    /////// ONLY FOR DEBUGGING PURPOSES - VIRTUAL SERIAL PORT!
-    ui->cmb_serialPorts->addItem("ttypts0");
+    }
 }
 
 void MainWindow::serialOpenPort() {
