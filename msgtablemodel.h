@@ -38,7 +38,7 @@ private:
     };
     typedef struct Package_t Package_t;
 
-    QVector<Package_t> packages;
+    mutable QVector<Package_t> packages;
     XMLParser *xmlparser;
 
     Memory_t *mem;
@@ -47,6 +47,7 @@ private:
 
 public:
     MSGTableModel(QObject *parent, Memory_t *m);
+    ~MSGTableModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const ;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;

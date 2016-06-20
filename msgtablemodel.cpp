@@ -18,6 +18,10 @@ MSGTableModel::MSGTableModel(QObject *parent, Memory_t *m) :
     xmlparser->read();
 }
 
+MSGTableModel::~MSGTableModel() {
+    delete xmlparser;
+}
+
 void MSGTableModel::xmlcallback(QString &identifier, QVector< QVector<QString> > &entrys, MSGTableModel *msgtable) {
     if(identifier == "data") {
         if(entrys[0][CALLBACK_ENTRY_OFFSET_DATA_SHORT] == "short") {
@@ -96,7 +100,7 @@ QVariant MSGTableModel::data(const QModelIndex &index, int role) const {
             if(!packages[row].ack) {
                 if(PackageMemory_GetMemID(mem, packages[row].p.id) < 0) {
                     // The package ID was not found in the memory, that means the entry is not available anymore and therefore an ack received.
-                    //packages[row].ack = true;
+                    packages[row].ack = true;
                 }
             }
             return packages[row].ack == true ? Qt::Checked : Qt::Unchecked;
