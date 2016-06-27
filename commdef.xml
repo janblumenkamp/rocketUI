@@ -57,31 +57,66 @@
     </data>
     <data>
         <id>8</id>
+        <specifier>PACKAGE_DATA_MAG_X</specifier>
+        <short>MAG X</short>
+        <description>X Magnetfield</description>
+        <unit>deg</unit>
+    </data>
+    <data>
+        <id>9</id>
+        <specifier>PACKAGE_DATA_MAG_Y</specifier>
+        <short>MAG Y</short>
+        <description>Y Magnetfield</description>
+        <unit>deg</unit>
+    </data>
+    <data>
+        <id>10</id>
+        <specifier>PACKAGE_DATA_MAG_Z</specifier>
+        <short>MAG Z</short>
+        <description>Z Magnetfield</description>
+        <unit>deg</unit>
+    </data>
+    <data>
+        <id>11</id>
         <specifier>PACKAGE_DATA_IMU_X</specifier>
         <short>IMU X</short>
         <description>X IMU</description>
         <unit>deg</unit>
     </data>
     <data>
-        <id>9</id>
+        <id>12</id>
         <specifier>PACKAGE_DATA_IMU_Y</specifier>
         <short>IMU Y</short>
         <description>Y IMU</description>
         <unit>deg</unit>
     </data>
     <data>
-        <id>10</id>
+        <id>13</id>
         <specifier>PACKAGE_DATA_IMU_Z</specifier>
         <short>IMU Z</short>
         <description>Z IMU</description>
         <unit>deg</unit>
     </data>
     <data>
-        <id>11</id>
+        <id>14</id>
         <specifier>PACKAGE_DATA_TEMPERATURE</specifier>
         <short>TEMP</short>
         <description>Temperature</description>
         <unit>deg Celsius</unit>
+    </data>
+    <data>
+        <id>15</id>
+        <specifier>PACKAGE_DATA_GPS_LON</specifier>
+        <short>GPS LON</short>
+        <description>GPS Longitude</description>
+        <unit>lon</unit>
+    </data>
+    <data>
+        <id>16</id>
+        <specifier>PACKAGE_DATA_GPS_LAT</specifier>
+        <short>GPS_LAT</short>
+        <description>GPS Latitude</description>
+        <unit>lat</unit>
     </data>
     <cmd>
         <id>0</id>
