@@ -6,10 +6,11 @@ extern "C" {
     #include "EMBcomm/Comm.h"
 }
 
-MSGTableModel::MSGTableModel(QObject *parent, Memory_t *m) :
+MSGTableModel::MSGTableModel(QObject *parent, Memory_t *m, Comm_t *c) :
     QAbstractTableModel(parent)
 {
     mem = m;
+    comm = c;
 
     xmlparser = new XMLParser("commdef.xml",
                               "commdef",
@@ -110,6 +111,11 @@ QVariant MSGTableModel::data(const QModelIndex &index, int role) const {
 }
 
 void MSGTableModel::addData(Comm_Package_t *p) {
+    // The automatic incrementation of the id is also in the Comm_Sendallpackages function, but we need it now because otherwise the actual id will not be displayed.
+    if(p->id == 0) {
+        p->id = comm->id_transmit_cnt++;
+    }
+
     if(rowCount() < MAX_ENTRYS) {
         beginInsertRows(QModelIndex(), 0, 0); // Add one row in the top
         endInsertRows();

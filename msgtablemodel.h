@@ -42,11 +42,12 @@ private:
     XMLParser *xmlparser;
 
     Memory_t *mem;
+    Comm_t *comm;
 
     QVector<QString> label_data, label_cmd, label_status, label_err;
 
 public:
-    MSGTableModel(QObject *parent, Memory_t *m);
+    MSGTableModel(QObject *parent, Memory_t *m, Comm_t *c);
     ~MSGTableModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const ;

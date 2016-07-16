@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer_launch, SIGNAL(timeout()), this, SLOT(timer_launch_event()));
 
     HAL_Memory_Init();
-    HAL_Serial_InitWriteString((void (*)(void *, int8_t *, uint16_t))SerialInterface::static_writeString, this);
+    HAL_Serial_InitWriteString((void (*)(void *, int8_t *, uint16_t))SerialInterface::static_writeString, sinterface);
     Memory_Init(&m_in, mementr_in, MEMORY_IN_START, MEMORY_IN_LENGTH, MEMORY_INOUT_ALIGN);
     Memory_Init(&m_out, mementr_out, MEMORY_OUT_START, MEMORY_OUT_LENGTH, MEMORY_INOUT_ALIGN);
     Comm_Init(&comm, &m_in, &m_out, (uint32_t (*)(void *))MainWindow::getTimeMS, this);
@@ -62,11 +62,11 @@ MainWindow::MainWindow(QWidget *parent) :
     flightdatamodel = new FlightdataModel(0);
     ui->tbl_flightdata->setModel(flightdatamodel);
 
-    msgtblmdl_in = new MSGTableModel(0, comm.m_in);
+    msgtblmdl_in = new MSGTableModel(0, comm.m_in, &comm);
     ui->tbl_msgin->setModel(msgtblmdl_in);
     ui->tbl_msgin->verticalHeader()->hide();
 
-    msgtblmdl_out = new MSGTableModel(0, comm.m_out);
+    msgtblmdl_out = new MSGTableModel(0, comm.m_out, &comm);
     ui->tbl_msgout->setModel(msgtblmdl_out);
     ui->tbl_msgout->verticalHeader()->hide();
 
@@ -74,8 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->lbl_flightstate->setText("Please calibrate");
 
-	// Buttons
-	connect(ui->btn_refreshPortList, SIGNAL(clicked()), this, SLOT(refreshPortList())); //Refresh Button (Liste der seriellen Ports)
+    // Buttons
+    connect(ui->btn_refreshPortList, SIGNAL(clicked()), this, SLOT(refreshPortList())); //Refresh Button (Liste der seriellen Ports)
     connect(ui->btn_connect, SIGNAL(clicked()), this, SLOT(serialOpenPort())); //Connect Button (Liste der seriellen Ports)
     connect(ui->btn_disconnect, SIGNAL(clicked()), this, SLOT(serialClosePort())); //Disconnect Button
 
@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
     delete sinterface;
-	delete ui;
+    delete ui;
     delete flightdatamodel;
     delete msgtblmdl_in;
     delete msgtblmdl_out;
@@ -95,9 +95,9 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::refreshPortList() {
-	ui->cmb_serialPorts->clear();
+    ui->cmb_serialPorts->clear();
     Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) {
-	   ui->cmb_serialPorts->addItem(port.portName());
+       ui->cmb_serialPorts->addItem(port.portName());
     }
 }
 
@@ -105,23 +105,23 @@ void MainWindow::serialOpenPort() {
     if(ui->cmb_serialPorts->currentText() != "") {
         if(sinterface->openPort("/dev/" + ui->cmb_serialPorts->currentText())) {
             ui->lbl_commstate->setText("Connected");
-			ui->btn_connect->setEnabled(false);
-			ui->btn_disconnect->setEnabled(true);
+            ui->btn_connect->setEnabled(false);
+            ui->btn_disconnect->setEnabled(true);
         } else {
             ui->lbl_commstate->setText("Failed");
-		}
-	}
+        }
+    }
 }
 
 void MainWindow::calibrate() {
     Comm_Package_t p;
-    p.id = 1111;
     p.length = 0;
     p.type = PACKAGE_TYPE_CMD;
     p.reg = PACKAGE_CMD_CALIBRATE;
-    pack_id_calibrate = p.id;
     msgtblmdl_out->send(&p);
     Comm_SendAllPackages(&comm);
+
+    pack_id_calibrate = p.id;
 
     ui->lbl_flightstate->setText("Calibration initiated");
     ui->btn_calibrate->setEnabled(false);
@@ -133,7 +133,6 @@ void MainWindow::launch() {
         // Message not in memory anymore, that means the ack was received.
 
         Comm_Package_t p;
-        p.id = 1122;
         p.length = 0;
         p.type = PACKAGE_TYPE_CMD;
         p.reg = PACKAGE_CMD_START;
@@ -155,8 +154,8 @@ void MainWindow::timer_launch_event() {
 
 void MainWindow::serialClosePort() {
     sinterface->closePort();
-	ui->btn_connect->setEnabled(true);
-	ui->btn_disconnect->setEnabled(false);
+    ui->btn_connect->setEnabled(true);
+    ui->btn_disconnect->setEnabled(false);
     ui->lbl_commstate->setText("Not connected");
 }
 
@@ -180,8 +179,8 @@ void MainWindow::receivedByte(int8_t byte) {
  */
 void MainWindow::updateTempGraph(void) {
     /*if(sinterface->isConnected())
-	{
-		using namespace std;
+    {
+        using namespace std;
         double height_max = *max_element(height_history.begin(), height_history.end());
         double height_min = *min_element(height_history.begin(), height_history.end());
 
